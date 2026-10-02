@@ -1,0 +1,164 @@
+/*
+ * Design tokens.
+ *
+ * The brief specifies a deliberately small palette: near-black, warm
+ * off-white, slate grey and one deep emerald accent. Everything below is
+ * either one of those four values or a measured derivative of one, so the
+ * site stays inside the palette while still meeting contrast requirements on
+ * both surfaces.
+ *
+ * Measured contrast ratios are noted where they drove a decision.
+ */
+
+:root {
+  /* --- Palette ----------------------------------------------------------
+     The four colours from the brief, exactly as specified.
+     -------------------------------------------------------------------- */
+  --c-black: #0e1113; /* dark sections, primary text on light sections */
+  --c-off-white: #f7f7f4; /* light sections */
+  --c-slate: #5a5f66; /* secondary text, borders on light: 6.0:1 on off-white */
+  --c-emerald: #0f7a5c; /* accent, links, buttons: 4.94:1 on off-white */
+
+  /* --- Derivatives ------------------------------------------------------
+     These exist because the four base colours cannot cover every case at
+     AA. Each is a shade or tint of a base colour, not a new hue.
+     -------------------------------------------------------------------- */
+
+  /* Accent text on near-black. The base emerald only manages 3.57:1 there,
+     which is fine for a fill or a border but not for words. */
+  --c-emerald-light: #2fc08c; /* 8.2:1 on near-black */
+  --c-emerald-deep: #0b5a45; /* emerald text on the emerald tint background */
+  --c-emerald-tint: #e3efe9; /* tag and badge background on light sections */
+
+  /* Secondary text on near-black. Slate itself is only 2.94:1 there. */
+  --c-slate-light: #6b7078; /* 3.8:1 on near-black */
+
+  /* Dark-section surfaces. */
+  --c-black-card: #151a1d; /* card on a dark band: 16.3:1 with off-white text */
+  --c-black-raised: #1a2023; /* raised card on a dark band */
+  --c-black-line: #262e32; /* decorative border on a dark band */
+  --c-black-line-strong: #6b7078; /* interactive border on a dark band: 3.8:1 */
+
+  /* Light-section surfaces. */
+  --c-off-white-card: #ffffff; /* card on a light band: 18.9:1 with black text */
+  --c-off-white-raised: #fdfdfb;
+  --c-off-white-line: #e3e2db; /* decorative border on a light band */
+  --c-off-white-line-strong: #5a5f66; /* interactive border on a light band: 6:1 */
+
+  /* --- Section surfaces -------------------------------------------------
+     Every band states its own text, border and card colours through these,
+     so one set of components works on any background. This is the mechanism
+     behind the dark/light alternation.
+     -------------------------------------------------------------------- */
+  --surface: var(--c-off-white);
+  --surface-dark: var(--c-black);
+
+  --text-strong: var(--c-black);
+  --text-body: #2f3639;
+  --text-muted: var(--c-slate);
+  --text-accent: var(--c-emerald-deep);
+
+  --accent: var(--c-emerald);
+  --accent-ink: var(--c-emerald-deep); /* accent used as readable text */
+  --accent-fill: var(--c-emerald); /* accent used as a fill */
+
+  --border: var(--c-off-white-line);
+  --border-strong: var(--c-off-white-line-strong);
+  --card-bg: var(--c-off-white-card);
+  --card-border: var(--c-off-white-line);
+
+  /* Muted body text needs a little more weight than plain slate to stay
+     comfortable at long measure, so it is a step darker than --c-slate. */
+  --on-dark-muted: #a9b0b6;
+
+  /* --- Typography --------------------------------------------------------
+     Space Grotesk for headings, Inter for body and UI. No third family.
+     -------------------------------------------------------------------- */
+  --font-display: 'Space Grotesk', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
+  --fs-h4: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --fs-h3: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
+  --fs-h2: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+  --fs-h1: clamp(2.25rem, 1.7rem + 2.8vw, 4rem);
+  --fs-eyebrow: 0.75rem;
+
+  --lh-tight: 1.08;
+  --lh-heading: 1.18;
+  --lh-body: 1.65;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-heading: 600;
+  --fw-bold: 700;
+
+  --ls-tight: -0.03em;
+  --ls-heading: -0.02em;
+  --ls-eyebrow: 0.14em;
+
+  /* --- Space --------------------------------------------------------------
+     A single scale used everywhere, so spacing stays consistent between
+     bands and components.
+     -------------------------------------------------------------------- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 5rem;
+
+  /* --- Shape --------------------------------------------------------------
+     Sharp and geometric rather than soft, per the logo and brand direction.
+     -------------------------------------------------------------------- */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(14, 17, 19, 0.06),
+    0 4px 12px rgba(14, 17, 19, 0.05);
+  --shadow-md: 0 2px 4px rgba(14, 17, 19, 0.06),
+    0 10px 28px rgba(14, 17, 19, 0.08);
+  --shadow-lg: 0 4px 10px rgba(14, 17, 19, 0.07),
+    0 24px 48px rgba(14, 17, 19, 0.12);
+  --shadow-dark: 0 24px 60px rgba(0, 0, 0, 0.5);
+
+  /* --- Motion -------------------------------------------------------------
+     Short and few, because the brief rules out excessive scroll animation.
+     -------------------------------------------------------------------- */
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+  --ease: cubic-bezier(0.2, 0, 0.2, 1);
+
+  --focus-ring: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent);
+
+  /* --- Layout ------------------------------------------------------------- */
+  --container: 74rem;
+  --container-narrow: 44rem;
+  --nav-height: 4.5rem;
+}
+
+/* The dark band flips the same set of hooks, not a separate set of styles. */
+.on-dark {
+  --surface: var(--c-black);
+  --text-strong: var(--c-off-white);
+  --text-body: #d3d8db;
+  --text-muted: var(--on-dark-muted);
+  --text-accent: var(--c-emerald-light);
+
+  --accent: var(--c-emerald-light);
+  --accent-ink: var(--c-emerald-light);
+
+  --border: var(--c-black-line);
+  --border-strong: var(--c-black-line-strong);
+  --card-bg: var(--c-black-card);
+  --card-border: var(--c-black-line);
+}

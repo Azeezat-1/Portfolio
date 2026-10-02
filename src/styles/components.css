@@ -1,0 +1,317 @@
+/* Reusable components: buttons, tags, cards, forms, logo, status. */
+
+/* --- Button -------------------------------------------------------------
+   One component for every call to action. An anchor when `href` is given,
+   a button otherwise, so semantics always match the behaviour.
+   --------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.15rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heading);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn svg {
+  width: 1.05em;
+  height: 1.05em;
+  flex: none;
+}
+
+.btn--primary {
+  background-color: var(--c-emerald);
+  border-color: var(--c-emerald);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background-color: var(--c-emerald-deep);
+  border-color: var(--c-emerald-deep);
+}
+
+.on-dark .btn--primary,
+.footer .btn--primary {
+  background-color: var(--c-emerald-light);
+  border-color: var(--c-emerald-light);
+  color: var(--c-black);
+}
+
+.on-dark .btn--primary:hover,
+.footer .btn--primary:hover {
+  background-color: #46d29c;
+  border-color: #46d29c;
+}
+
+.btn--secondary {
+  background-color: transparent;
+  border-color: var(--border-strong);
+  color: var(--text-strong);
+}
+
+.btn--secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* --- Tag ----------------------------------------------------------------- */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background-color: var(--c-emerald-tint);
+  color: var(--c-emerald-deep);
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.on-dark .tag {
+  background-color: color-mix(in srgb, var(--c-emerald-light) 12%, transparent);
+  border-color: color-mix(in srgb, var(--c-emerald-light) 28%, transparent);
+  color: var(--c-emerald-light);
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- Card ---------------------------------------------------------------- */
+
+.card {
+  position: relative;
+  padding: var(--space-md);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--card-bg);
+}
+
+.card__title {
+  margin-bottom: var(--space-2xs);
+  font-size: var(--fs-h4);
+}
+
+.card__text {
+  color: var(--text-body);
+  font-size: var(--fs-sm);
+}
+
+/* --- Logo ---------------------------------------------------------------- */
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--c-black);
+  text-decoration: none;
+}
+
+.logo__mark {
+  flex: none;
+  color: var(--c-emerald);
+}
+
+.logo__text {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.logo__submark {
+  padding-left: 0.55rem;
+  border-left: 1px solid currentColor;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: var(--fw-heading);
+  letter-spacing: var(--ls-eyebrow);
+  line-height: 1;
+  opacity: 0.65;
+}
+
+.on-dark .logo,
+.footer .logo {
+  color: var(--c-off-white);
+}
+
+/* --- Form ---------------------------------------------------------------- */
+
+.form-grid {
+  display: grid;
+  gap: var(--space-md);
+}
+
+@media (min-width: 40rem) {
+  .form-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form-grid--2 > .field--full {
+    grid-column: 1 / -1;
+  }
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field__label {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heading);
+  color: var(--text-strong);
+}
+
+.field__optional {
+  font-weight: var(--fw-regular);
+  color: var(--text-muted);
+}
+
+.field__control {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--c-off-white);
+  color: var(--c-black);
+  font-size: var(--fs-sm);
+  transition:
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+
+.field__control::placeholder {
+  color: #8b9298;
+}
+
+.field__control:hover {
+  border-color: var(--c-emerald);
+}
+
+.field__control:focus {
+  outline: none;
+  border-color: var(--c-emerald);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-emerald) 25%, transparent);
+}
+
+.field__control:focus-visible {
+  outline: none;
+}
+
+textarea.field__control {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.field--invalid .field__control {
+  border-color: #b3261e;
+}
+
+.field--invalid .field__control:focus {
+  box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.22);
+}
+
+.field__hint {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.field__error {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: #b3261e;
+}
+
+.field__select {
+  position: relative;
+}
+
+.field__select select {
+  appearance: none;
+  padding-right: 2.5rem;
+}
+
+.field__select svg {
+  position: absolute;
+  top: 50%;
+  right: 0.85rem;
+  width: 1rem;
+  height: 1rem;
+  color: var(--c-slate);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* --- Form status messages -------------------------------------------------
+   A polite live region: announced without interrupting.
+   --------------------------------------------------------------------- */
+
+.form-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-md);
+  font-size: var(--fs-sm);
+}
+
+.form-status svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: none;
+  margin-top: 0.15rem;
+}
+
+.form-status--success {
+  background-color: #e6f4ec;
+  border-color: #1b7a4b;
+  color: #14532d;
+}
+
+.form-status--error {
+  background-color: #fdeceb;
+  border-color: #b3261e;
+  color: #7f1d1d;
+}
+
+.form-note {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
