@@ -40,9 +40,21 @@ const icons = {
   wrench: Wrench,
 }
 
+/**
+ * Accepts either `pen-tool` or `penTool`, so data files can use whichever reads
+ * better. Without this the hyphenated names in `services.js` silently matched
+ * nothing and the icon vanished.
+ */
+function resolve(name) {
+  if (icons[name]) return icons[name]
+  const camel = name.replace(/-(\w)/g, (_, c) => c.toUpperCase())
+  return icons[camel]
+}
+
 /** Renders a named icon. Unknown names render nothing rather than throwing. */
 export default function Icon({ name, ...rest }) {
-  const Component = icons[name]
+  if (!name) return null
+  const Component = resolve(name)
   if (!Component) return null
   return <Component {...rest} />
 }
