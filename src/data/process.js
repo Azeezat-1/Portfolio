@@ -1,15 +1,13 @@
 /**
  * The four-step process.
  *
- * `number` is the "01"-style step badge the brief asks for — these are step
- * numbers, not stats, so they are allowed on the page. `summary` is the short
- * line under the step title; `detail` is the fuller explanation. Both read as
- * organised and reliable rather than as a sales pitch.
+ * `summary` is the short line under the step title; `detail` is the fuller
+ * explanation. Both read as organised and reliable rather than as a sales
+ * pitch.
  */
 
 export const processSteps = [
   {
-    number: '01',
     title: 'Discovery',
     summary:
       'Understanding what you are building and what it needs to do, before anything is designed.',
@@ -17,7 +15,6 @@ export const processSteps = [
       'I ask what the site or application is for, who uses it, and what you want someone to be able to do after using it. If there is an existing site or brand, I look at what to keep.',
   },
   {
-    number: '02',
     title: 'Planning',
     summary:
       'Agreeing the pages, features and stack, and what is explicitly out of scope.',
@@ -25,7 +22,6 @@ export const processSteps = [
       'You get a written outline: the pages, the main features, the stack I recommend and why, and the order of work. Anything uncertain is flagged here rather than discovered halfway through.',
   },
   {
-    number: '03',
     title: 'Design & Development',
     summary:
       'Building the thing, with progress you can look at as it happens.',
@@ -33,7 +29,6 @@ export const processSteps = [
       'Design and development run together where possible. You see working pages early, on real content, so feedback happens on the actual site instead of on a mock-up.',
   },
   {
-    number: '04',
     title: 'Refinement & Delivery',
     summary:
       'Testing on real devices, fixing what breaks, then handing it over with instructions.',

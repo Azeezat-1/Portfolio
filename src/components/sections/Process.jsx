@@ -6,9 +6,7 @@ import { processSteps } from '../../data/process.js'
 /**
  * The four-step process, as a row of frosted cards.
  *
- * Each step carries a "01"-style step badge, an icon, a short title and a
- * one-line description. The badges are step numbers (the brief explicitly
- * allows these) rather than fictional stats.
+ * Each step carries an icon, a short title and a one-line description.
  */
 export default function Process() {
   return (
@@ -29,9 +27,6 @@ export default function Process() {
           {processSteps.map((step, index) => (
             <Reveal as="li" key={step.title} delay={index * 70}>
               <article className="card process__step">
-                <span className="process__badge" aria-hidden="true">
-                  {step.number}
-                </span>
                 <span className={`chip chip--n${index % 4}`}>
                   <StepIcon index={index} />
                 </span>

@@ -1178,18 +1178,6 @@
   padding: var(--space-lg);
 }
 
-/* The "01"-style step badge. These are step numbers, explicitly allowed by the
-   brief, not fictional stats. */
-.process__badge {
-  position: absolute;
-  top: var(--space-sm);
-  right: var(--space-sm);
-  font-family: var(--font-display);
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-eyebrow);
-  color: var(--text-muted);
-}
 .process__title {
   margin-bottom: var(--space-3xs);
   font-size: var(--fs-h4);
