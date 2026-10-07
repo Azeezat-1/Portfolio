@@ -1,36 +1,42 @@
 import SectionHeading from '../ui/SectionHeading.jsx'
 import Reveal from '../ui/Reveal.jsx'
+import Icon from '../ui/Icon.jsx'
 import { processSteps } from '../../data/process.js'
 
-/** Four numbered steps, in the style of the reference sites. */
+/**
+ * The four-step process, as a row of frosted cards.
+ *
+ * Each step carries a "01"-style step badge, an icon, a short title and a
+ * one-line description. The badges are step numbers (the brief explicitly
+ * allows these) rather than fictional stats.
+ */
 export default function Process() {
   return (
-    <section className="section process on-dark" aria-labelledby="process-title">
-      <div className="band-bg" aria-hidden="true">
-        <span className="band-bg__grid" />
-      </div>
-
+    <section
+      className="section process"
+      id="process"
+      aria-labelledby="process-title"
+    >
       <div className="container">
         <SectionHeading
           id="process-title"
-          eyebrow="How I work"
-          title="Four steps, in the same order every time."
+          eyebrow="My process"
+          title="How I Work"
           split
         />
 
         <ol className="process__grid">
           {processSteps.map((step, index) => (
-            <Reveal as="li" key={step.number} delay={index * 70}>
-              <article className="process__step">
-                <span className="process__number" aria-hidden="true">
+            <Reveal as="li" key={step.title} delay={index * 70}>
+              <article className="card process__step">
+                <span className="process__badge" aria-hidden="true">
                   {step.number}
                 </span>
-                <h3 className="process__title">
-                  <span className="u-sr-only">Step {index + 1}: </span>
-                  {step.title}
-                </h3>
+                <span className={`chip chip--n${index % 4}`}>
+                  <StepIcon index={index} />
+                </span>
+                <h3 className="process__title">{step.title}</h3>
                 <p className="process__summary">{step.summary}</p>
-                <p className="process__detail">{step.detail}</p>
               </article>
             </Reveal>
           ))}
@@ -38,4 +44,10 @@ export default function Process() {
       </div>
     </section>
   )
+}
+
+/** One outline icon per step, matching the pastel chip it sits in. */
+function StepIcon({ index }) {
+  const icons = ['search', 'listChecks', 'code', 'checkCircle']
+  return <Icon name={icons[index]} aria-hidden="true" />
 }

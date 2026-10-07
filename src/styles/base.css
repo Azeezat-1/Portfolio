@@ -19,8 +19,8 @@ html {
 
 body {
   min-height: 100dvh;
-  background-color: var(--c-off-white);
-  color: var(--c-black);
+  background-color: var(--c-bg);
+  color: var(--text-body);
   font-family: var(--font-body);
   font-size: var(--fs-base);
   line-height: var(--lh-body);
@@ -58,7 +58,7 @@ ol[class] {
 }
 
 a {
-  color: var(--c-emerald-deep);
+  color: var(--accent-ink);
   text-underline-offset: 0.2em;
 }
 
@@ -72,7 +72,7 @@ h4 {
   font-weight: var(--fw-heading);
   line-height: var(--lh-heading);
   letter-spacing: var(--ls-heading);
-  color: var(--text-strong, var(--c-black));
+  color: var(--text-strong, var(--text-strong));
   text-wrap: balance;
 }
 
@@ -115,7 +115,10 @@ b {
   font-weight: var(--fw-bold);
   letter-spacing: var(--ls-eyebrow);
   text-transform: uppercase;
-  color: var(--accent-ink);
+  /* Section labels are the one accent-coloured text on the page, matched to
+     the fancy violet #7C5CFC but using the darker #6B48EE because 12px text
+     needs at least 4.5:1 and #7C5CFC only reaches 3.97:1. */
+  color: var(--c-violet-ink);
 }
 
 .lead {
@@ -124,29 +127,15 @@ b {
   color: var(--text-body);
 }
 
-.prose {
-  max-width: 62ch;
-  color: var(--text-body);
-}
-
-.prose > * + * {
-  margin-top: var(--space-sm);
-}
-
 /* --- Focus ---------------------------------------------------------------
    Visible on both surfaces. The ring is drawn in two parts so it stays
    legible whether it lands on near-black or off-white.
    --------------------------------------------------------------------- */
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--c-violet);
   outline-offset: 3px;
   border-radius: var(--radius-sm);
-}
-
-.on-dark :focus-visible,
-.footer :focus-visible {
-  outline-color: var(--c-emerald-light);
 }
 
 .skip-link {
@@ -155,8 +144,8 @@ b {
   left: var(--space-sm);
   z-index: 100;
   padding: var(--space-2xs) var(--space-sm);
-  border-radius: var(--radius-md);
-  background-color: var(--c-emerald);
+  border-radius: var(--radius-pill);
+  background-color: var(--c-dark-btn);
   color: #fff;
   font-size: var(--fs-sm);
   font-weight: var(--fw-heading);
@@ -188,7 +177,7 @@ b {
 /* --- Selection ----------------------------------------------------------- */
 
 ::selection {
-  background-color: var(--c-emerald);
+  background-color: var(--accent-fill);
   color: #fff;
 }
 

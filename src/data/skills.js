@@ -1,94 +1,42 @@
 /**
- * Skills and technology.
+ * Skills and services.
  *
- * The brief asks for categories with a short explanation of how each one is
- * actually used, not a wall of technology logos. `number` is the ghost numeral
- * shown on the card; `items` are the plain-text technologies.
+ * The brief asks for a single 4-up grid under "Skills & Services", with each
+ * card carrying an icon, a title and a one-line description. It explicitly does
+ * not want a technology logo wall: every card explains what she does with the
+ * tools, rather than just naming them.
+ *
+ * Descriptions say what actually happens rather than using marketing language.
+ * Icons are Lucide names (see `src/components/ui/Icon.jsx`).
  */
 
-export const skillGroups = [
+export const skills = [
   {
     id: 'front-end',
-    title: 'Front-end development',
-    summary:
-      'Interfaces built from components, so they stay consistent and are straightforward to change later. Responsive and accessible from the start rather than fixed at the end.',
-    items: [
-      'HTML',
-      'CSS',
-      'JavaScript',
-      'React',
-      'Responsive design',
-      'Accessibility',
-      'Component-based interfaces',
-    ],
-  },
-  {
-    id: 'back-end',
-    title: 'Back-end development',
-    summary:
-      'The server side: routes, authentication, business rules and the database layer. I build APIs that are easy to integrate and easy to reason about.',
-    items: [
-      'Node.js',
-      'Express',
-      'REST APIs',
-      'PHP',
-      'Authentication',
-      'Server-side logic',
-      'Database integration',
-    ],
+    title: 'Front-End Development',
+    icon: 'component',
+    description:
+      'HTML, CSS, JavaScript and React, built into responsive layouts that hold together from a phone to a wide screen.',
   },
   {
     id: 'full-stack',
-    title: 'Full-stack development',
-    summary:
-      'Comfortable across MERN (MongoDB, Express, React, Node.js) and LAMP (Linux, Apache, MySQL, PHP). The stack follows the client\'s existing setup or preference rather than a fixed choice.',
-    items: ['MongoDB', 'Express', 'React', 'Node.js', 'Linux', 'Apache', 'MySQL', 'PHP'],
+    title: 'Full-Stack Development',
+    icon: 'layers',
+    description:
+      'Comfortable in both MERN (MongoDB, Express, React, Node.js) and LAMP (Linux, Apache, MySQL, PHP), with the stack chosen to suit the project.',
   },
   {
-    id: 'cms',
-    title: 'CMS and website development',
-    summary:
-      'WordPress sites the client can actually run: themes customised to match the design, plugins integrated, and content managed without touching code.',
-    items: [
-      'WordPress',
-      'Theme customization',
-      'Plugin integration',
-      'Content-managed websites',
-    ],
+    id: 'wordpress',
+    title: 'WordPress',
+    icon: 'fileText',
+    description:
+      'Building and customising WordPress websites, so the design holds up and you can still update the content yourself.',
   },
   {
-    id: 'design-to-code',
-    title: 'Design-to-code',
-    summary:
-      'Turning a Figma design into a working, responsive site. I match the design precisely instead of approximating it, and keep it correct at every breakpoint.',
-    items: ['Figma', 'Pixel-accurate builds', 'Responsive implementation'],
+    id: 'figma-to-code',
+    title: 'Figma-to-Code',
+    icon: 'penTool',
+    description:
+      'Turning a Figma design into a fully built, responsive, production-ready website that matches the original.',
   },
-  {
-    id: 'workflow',
-    title: 'Development workflow',
-    summary:
-      'The unglamorous part that decides whether a launch goes well: version control, debugging, deployment and checking performance once real content is in place.',
-    items: [
-      'Git',
-      'GitHub',
-      'Debugging',
-      'API integration',
-      'Deployment',
-      'Performance optimization',
-      'Responsive testing',
-    ],
-  },
-]
-
-/** One-line version of the stack, for the hero. */
-export const stackSummary = [
-  'React',
-  'Node.js',
-  'Express',
-  'MongoDB',
-  'MySQL',
-  'PHP',
-  'WordPress',
-  'Figma',
-  'Git',
 ]

@@ -1,5 +1,8 @@
-/* Section-specific styles: nav, hero, about, skills, services, projects,
-   process, achievements, call to action, contact and footer. */
+/* Section-specific styles, in page order: nav, hero, about, services, tools,
+   projects, process, testimonials, contact and footer.
+
+   Everything here sits on the same pale ground. Depth comes from the frosted
+   card treatment and the blurred orbs behind, not from alternating bands. */
 
 /* --- Navigation --------------------------------------------------------- */
 
@@ -7,16 +10,26 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: var(--c-black);
-  /* Transparent until the page moves, then a solid bar so text scrolling
-     underneath never shows through. */
-  transition: background-color var(--dur-base) var(--ease);
+  /* A frosted glass bar per the brief. Solid before scroll so the page content
+     is never visible through it, then translucent and blurred once moved. */
+  background-color: rgb(244 243 248 / 88%);
+  border-bottom: 1px solid transparent;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
 }
 
 .nav--scrolled {
-  background-color: color-mix(in srgb, var(--c-black) 92%, transparent);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--c-black-line);
+  border-bottom-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .nav {
+    background-color: rgb(244 243 248 / 70%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    backdrop-filter: blur(14px) saturate(150%);
+  }
 }
 
 .nav__inner {
@@ -24,6 +37,8 @@
   align-items: center;
   gap: var(--space-md);
   min-height: var(--nav-height);
+  /* Centres the link pill between the wordmark and the CTA on wide screens. */
+  position: relative;
 }
 
 .nav__brand {
@@ -34,59 +49,54 @@
   text-decoration: none;
 }
 
+/* The centred pill nav group. Each link is a soft chip; the active one turns
+   violet so the current section is obvious without a separate indicator. */
 .nav__links {
   display: none;
   align-items: center;
-  gap: clamp(1rem, 2vw, 2rem);
+  gap: 0.15rem;
+  padding: 0.3rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background-color: rgb(255 255 255 / 55%);
 }
 
 @media (min-width: 68rem) {
   .nav__links {
     display: flex;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 
 .nav__link {
-  position: relative;
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  min-height: 40px;
+  padding-inline: 0.9rem;
+  border-radius: var(--radius-pill);
   font-family: var(--font-display);
   font-size: var(--fs-sm);
   font-weight: var(--fw-medium);
-  letter-spacing: 0.01em;
+  letter-spacing: 0.005em;
   text-decoration: none;
-  color: #b6bcc1;
-  transition: color var(--dur-base) var(--ease);
+  color: var(--text-body);
+  transition:
+    background-color var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
 }
 
-.nav__link:hover,
+.nav__link:hover {
+  background-color: rgb(255 255 255 / 70%);
+  color: var(--text-strong);
+}
+
+/* Active state is the violet fill named in the brief, so the pill itself is
+   the indicator. */
 .nav__link.is-active {
-  color: var(--c-off-white);
-}
-
-/* The rule tracks the text, not the padded target, so it stays a tight
-   underline instead of dropping to the bottom of the tap area. */
-.nav__link-label {
-  position: relative;
-}
-
-.nav__link-label::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -5px;
-  width: 100%;
-  height: 2px;
-  background-color: var(--c-emerald-light);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--dur-base) var(--ease);
-}
-
-.nav__link:hover .nav__link-label::after,
-.nav__link.is-active .nav__link-label::after {
-  transform: scaleX(1);
+  background-color: var(--accent-fill);
+  color: #fff;
 }
 
 .nav__actions {
@@ -104,9 +114,10 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--c-black-line-strong);
-  border-radius: var(--radius-md);
-  color: var(--c-off-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background-color: rgb(255 255 255 / 60%);
+  color: var(--text-strong);
 }
 
 .nav__toggle svg {
@@ -137,7 +148,7 @@
     padding: var(--space-lg) clamp(1.25rem, 5vw, 2.5rem) var(--space-xl);
     overflow-y: auto;
     overscroll-behavior: contain;
-    background-color: var(--c-black);
+    background-color: var(--c-bg);
     /* Kept out of the layout and the tab order until it opens. */
     visibility: hidden;
     opacity: 0;
@@ -172,13 +183,13 @@
   gap: var(--space-md);
   min-height: 56px;
   padding-block: var(--space-sm);
-  border-bottom: 1px solid var(--c-black-line);
+  border-bottom: 1px solid var(--border);
   font-family: var(--font-display);
   font-size: 1.375rem;
   font-weight: var(--fw-heading);
   letter-spacing: var(--ls-heading);
   text-decoration: none;
-  color: var(--c-off-white);
+  color: var(--text-strong);
 }
 
 .nav-drawer__foot {
@@ -193,134 +204,208 @@
 
 /* --- Hero ---------------------------------------------------------------- */
 
+/* An explicit minmax(0, 1fr) column, not the implicit auto column. The preview
+   frame contains a <pre> with long lines, and an auto-sized grid track takes its
+   min-content width, which pushed the whole hero wider than a phone screen.
+   minmax(0, 1fr) lets the track shrink below that and the <pre> scrolls. */
 .hero__inner {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-xl);
+  align-items: center;
 }
 
 @media (min-width: 64rem) {
   .hero__inner {
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.85fr);
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: var(--space-2xl);
   }
 }
 
-.hero__main {
-  display: grid;
-  gap: var(--space-md);
-  justify-items: start;
+.hero__title {
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-extrabold);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  color: var(--text-strong);
 }
 
-.hero__title {
-  max-width: 20ch;
+/* The violet accent subheading under the name, 28-32px semibold. */
+.hero__role {
+  margin-block: var(--space-sm) var(--space-md);
+  font-family: var(--font-display);
+  font-size: var(--fs-role);
+  font-weight: var(--fw-heading);
+  letter-spacing: var(--ls-heading);
+  color: var(--accent-ink);
 }
 
 .hero__text {
-  max-width: 54ch;
+  max-width: 46ch;
   font-size: var(--fs-lead);
+  line-height: var(--lh-body);
   color: var(--text-body);
 }
 
 .hero__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2xs);
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
 }
 
 .hero__actions .btn {
   min-height: 48px;
 }
 
-/* Factual rows, not marketing stats. */
-.hero__facts {
-  display: grid;
-  gap: var(--space-sm);
-  width: 100%;
-  max-width: 40rem;
-  margin: var(--space-md) 0 0;
-  padding-top: var(--space-md);
-  border-top: 1px solid var(--border);
+/* The hero CTA turns violet on hover, a deliberate accent: white on #6B48EE
+   clears 4.5:1, so text stays legible while the fill changes. */
+.hero__actions .btn--primary:hover {
+  background-color: var(--accent-fill);
+  border-color: var(--accent-fill);
+  box-shadow: 0 14px 30px -12px rgb(124 92 252 / 55%);
 }
 
-@media (min-width: 34rem) {
-  .hero__facts {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-md);
+@media (max-width: 41.999rem) {
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero__actions .btn {
+    width: 100%;
   }
 }
 
-.hero__fact dt {
-  margin-bottom: 0.2rem;
-  font-family: var(--font-display);
-  font-size: var(--fs-eyebrow);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-eyebrow);
-  text-transform: uppercase;
-  color: var(--c-emerald-light);
+/* The right column: a large rounded glass frame holding the preview, with the
+   stat badges overlapping its lower edge. */
+.hero__aside {
+  position: relative;
+  min-width: 0;
 }
 
-.hero__fact dd {
-  margin: 0;
-  font-size: var(--fs-sm);
-  color: var(--text-body);
-}
-
-.hero__panel {
+.hero__frame {
+  position: relative;
+  min-width: 0;
   padding: var(--space-md);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background-color: var(--card-bg);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg); /* big surfaces, 24px */
+  background-color: var(--glass-fallback);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
 }
 
-.hero__panel-head {
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .hero__frame {
+    background-color: var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur))
+      saturate(var(--glass-saturation));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  }
+}
+
+/* The three window dots, drawn as CSS rather than shipped as an image. */
+.hero__frame-bar {
   display: flex;
-  align-items: center;
-  gap: var(--space-2xs);
-  padding-bottom: var(--space-sm);
-  margin-bottom: var(--space-sm);
-  border-bottom: 1px solid var(--border);
-  font-family: var(--font-display);
-  font-size: var(--fs-eyebrow);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-eyebrow);
-  text-transform: uppercase;
-  color: var(--text-muted);
+  gap: 0.35rem;
+  margin-bottom: var(--space-md);
 }
 
-.hero__panel-head svg {
-  color: var(--c-emerald-light);
+.hero__frame-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background-color: rgb(22 22 28 / 12%);
 }
 
-.hero__stack {
+.hero__code {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  /* Long lines scroll rather than widen the page. */
+  overflow-x: auto;
+}
+
+/* Syntax colours for the decorative preview. Keywords and property names in
+   the violet accent, string values in the amber/peach tone, bracket
+   punctuation in the teal tone. All reuse the §1.2 chip inks — no new hue. */
+.hero__code .tok-kw,
+.hero__code .tok-prop {
+  color: var(--c-violet-ink);
+}
+
+.hero__code .tok-str {
+  color: var(--chip-amber-ink);
+}
+
+.hero__code .tok-punct {
+  color: var(--chip-teal-ink);
+}
+
+/* The one floating element near the hero visual: a short text label. The brief
+   bans counters and "X+" stats anywhere on the page, and explicitly allows a
+   text label or icon as the alternative. */
+.hero__badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  gap: var(--space-xs);
+  margin-top: calc(-1 * var(--space-lg));
+  margin-left: var(--space-lg);
+  position: relative;
+  z-index: 2;
+  min-width: 0;
 }
 
-.hero__stack li {
-  padding: 0.2rem 0.5rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+.hero__label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: var(--space-2xs) var(--space-sm);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-pill);
+  background-color: var(--glass-fallback);
+  box-shadow: var(--shadow-sm);
   font-family: var(--font-display);
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-medium);
-  color: var(--text-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heading);
+  color: var(--text-strong);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .hero__label {
+    background-color: var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur))
+      saturate(var(--glass-saturation));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  }
+}
+
+@media (max-width: 41.999rem) {
+  .hero__badges {
+    margin-left: 0;
+    margin-top: var(--space-md);
+  }
+
+  .hero__label {
+    font-size: var(--fs-xs);
+  }
 }
 
 /* --- About --------------------------------------------------------------- */
 
+/* Writing beside a supporting visual. No stat row or counters: the prose is
+   the whole story, and the visual is a workspace mockup, not a metrics panel.
+   --------------------------------------------------------------------- */
 .about__grid {
   display: grid;
   gap: var(--space-xl);
+  align-items: center;
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 60rem) {
   .about__grid {
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
     gap: var(--space-2xl);
   }
 }
@@ -328,162 +413,265 @@
 .about__prose {
   display: grid;
   gap: var(--space-sm);
+}
+
+.about__prose .lead {
+  margin-bottom: 0;
   color: var(--text-body);
 }
 
-.about__principles {
+/* The workspace mockup: a laptop with an editor in the site's syntax colours,
+   a notebook and a mug, inside a frosted glass frame. */
+.about__media {
+  min-width: 0;
+}
+
+.about__frame {
+  position: relative;
+  padding: clamp(var(--space-lg), 4vw, var(--space-xl));
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  background-color: var(--glass-fallback);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .about__frame {
+    background-color: var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur))
+      saturate(var(--glass-saturation));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  }
+}
+
+/* A faint cool/blue grade so the mockup sits against the lavender-grey ground
+   rather than looking pasted in, mirroring the colour treat the brief gives
+   the About photograph. */
+.about__frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgb(90 120 255 / 5%),
+    transparent 55%,
+    rgb(90 120 255 / 3%)
+  );
+}
+
+.about__desk {
+  position: relative;
+  padding-bottom: 1.1rem;
+}
+
+.about__laptop {
+  width: min(100%, 30rem);
+  margin-inline: auto;
+}
+
+.about__screen {
+  padding: var(--space-xs);
+  border: 1px solid rgb(22 22 28 / 10%);
+  border-radius: var(--radius-md);
+  background-color: rgb(255 255 255 / 82%);
+  box-shadow: var(--shadow-md);
+}
+
+@media (min-width: 60rem) {
+  .about__screen {
+    padding: var(--space-sm);
+  }
+}
+
+.about__screen-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: var(--space-2xs);
+}
+
+.about__dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background-color: rgb(22 22 28 / 14%);
+}
+
+.about__dot:nth-child(1) {
+  background-color: rgb(246 94 94 / 75%);
+}
+
+.about__dot:nth-child(2) {
+  background-color: rgb(248 176 74 / 85%);
+}
+
+.about__dot:nth-child(3) {
+  background-color: rgb(87 187 138 / 85%);
+}
+
+.about__screen-title {
+  margin-left: auto;
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+
+.about__editor {
+  border-radius: calc(var(--radius-md) - 6px);
+  background-color: #fafafc;
+  overflow: hidden;
+}
+
+.about__editor-line {
   display: grid;
-  gap: var(--space-md);
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: var(--space-xs);
+  padding: 0.22rem var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.55;
+  white-space: nowrap;
+  color: var(--text-strong);
 }
 
-.about__principle {
+.about__ln {
+  text-align: right;
+  color: rgb(22 22 28 / 28%);
+  user-select: none;
+}
+
+/* The same four syntax colours as the hero preview, reused here. */
+.about__kw,
+.about__prop {
+  color: var(--c-violet-ink);
+}
+
+.about__str {
+  color: var(--chip-amber-ink);
+}
+
+.about__br {
+  color: var(--chip-teal-ink);
+}
+
+.about__pc {
+  color: rgb(22 22 28 / 60%);
+}
+
+.about__deck {
+  height: 0.95rem;
+  margin-top: -0.35rem;
+  border: 1px solid rgb(22 22 28 / 10%);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background: linear-gradient(180deg, #f2f1f6, #e9e8ef);
+}
+
+.about__deck::after {
+  content: '';
+  display: block;
+  width: 5.5rem;
+  height: 0.28rem;
+  margin-inline: auto;
+  border-radius: var(--radius-pill);
+  background-color: rgb(22 22 28 / 14%);
+  transform: translateY(0.2rem);
+}
+
+/* Two small desk accents at the edges of the laptop: a notebook and a mug. */
+.about__note {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: var(--space-md);
-  padding-bottom: var(--space-md);
-  border-bottom: 1px solid var(--border);
+  gap: 0.28rem;
+  width: 3.6rem;
+  padding: 0.5rem;
+  border: 1px solid rgb(22 22 28 / 8%);
+  border-radius: var(--radius-sm);
+  background-color: rgb(255 255 255 / 78%);
+  box-shadow: var(--shadow-sm);
 }
 
-.about__principle:last-child {
-  padding-bottom: 0;
-  border-bottom: 0;
+.about__note-line {
+  height: 0.18rem;
+  border-radius: var(--radius-pill);
+  background-color: rgb(124 92 252 / 30%);
 }
 
-.about__principle-number {
-  font-family: var(--font-display);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-bold);
-  line-height: 1.7;
-  color: var(--c-emerald);
+.about__note-line:nth-child(2) {
+  background-color: rgb(22 22 28 / 14%);
 }
 
-.about__principle-title {
-  margin-bottom: 0.25rem;
-  font-size: var(--fs-h4);
+.about__note-line:nth-child(3) {
+  background-color: rgb(22 22 28 / 10%);
 }
 
-.about__principle-text {
-  color: var(--text-body);
-  font-size: var(--fs-sm);
+.about__mug {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.35rem;
+  width: 1.5rem;
+  height: 1.7rem;
+  border: 1px solid rgb(22 22 28 / 8%);
+  border-radius: 0.28rem;
+  background-color: rgb(233 228 253 / 90%);
+  box-shadow: var(--shadow-sm);
 }
 
-/* --- Skills -------------------------------------------------------------- */
+.about__mug::after {
+  content: '';
+  position: absolute;
+  top: 0.4rem;
+  right: -0.42rem;
+  width: 0.5rem;
+  height: 0.7rem;
+  border: 0.16rem solid rgb(22 22 28 / 22%);
+  border-left: 0;
+  border-radius: 0 0.35rem 0.35rem 0;
+}
 
+@media (max-width: 33rem) {
+  .about__note {
+    display: none;
+  }
+}
+
+/* --- Skills & Services --------------------------------------------------- */
+
+/* The only icon grid on the page. The brief rules out a technology logo wall,
+   so each card is icon, title and one line explaining what the work involves. */
 .skills__grid {
   align-items: stretch;
 }
 
 .skill-card {
-  display: flex;
-  padding: var(--space-lg) var(--space-md) var(--space-md);
-}
-
-.skill-card__body {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  gap: var(--space-2xs);
-  align-content: start;
-}
-
-.skill-card__text {
-  max-width: 48ch;
-  margin-bottom: var(--space-2xs);
-}
-
-/* --- Services ------------------------------------------------------------ */
-
-.services__grid {
-  display: grid;
-  border-top: 1px solid var(--border);
-  border-left: 1px solid var(--border);
-}
-
-@media (min-width: 42rem) {
-  .services__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 64rem) {
-  .services__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.service-card {
   display: grid;
   align-content: start;
   gap: var(--space-2xs);
-  padding: var(--space-md);
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  transition: background-color var(--dur-base) var(--ease);
+  padding: var(--space-lg);
+  transition:
+    transform var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
 }
 
-.service-card:hover {
-  background-color: color-mix(in srgb, var(--c-emerald-light) 5%, transparent);
+.skill-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-float);
 }
 
-.service-card__icon {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  margin-bottom: var(--space-2xs);
-  border: 1px solid color-mix(in srgb, var(--c-emerald-light) 30%, transparent);
-  border-radius: var(--radius-md);
-  color: var(--c-emerald-light);
-}
-
-.service-card__title {
+.skill-card__title {
+  margin-bottom: var(--space-3xs);
   font-size: var(--fs-h4);
 }
 
-.service-card__summary {
+.skill-card__text {
+  margin-bottom: 0;
   color: var(--text-body);
   font-size: var(--fs-sm);
-}
-
-.service-card__deliverables {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-top: var(--space-2xs);
-  padding: 0;
-  list-style: none;
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
-}
-
-/* Takes a full row so the items sit under their own heading. */
-.service-card__label {
-  flex-basis: 100%;
-  margin-bottom: 0.2rem;
-  font-family: var(--font-display);
-  font-size: var(--fs-eyebrow);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-eyebrow);
-  text-transform: uppercase;
-  color: var(--c-emerald-light);
-}
-
-.service-card__deliverables li:not(.service-card__label) {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.service-card__deliverables li:not(.service-card__label)::before {
-  content: '';
-  width: 3px;
-  height: 3px;
-  flex: none;
-  border-radius: 50%;
-  background-color: currentColor;
 }
 
 /* --- Projects ------------------------------------------------------------ */
@@ -496,463 +684,562 @@
   gap: var(--space-sm);
   padding-bottom: var(--space-lg);
   margin-bottom: var(--space-lg);
-  border-bottom: 1px solid var(--border);
 }
 
 .filters__bar {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
+  padding: 0.3rem;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-pill);
+  background-color: var(--glass-bg);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .filters__bar {
+    -webkit-backdrop-filter: blur(var(--glass-blur))
+      saturate(var(--glass-saturation));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  }
 }
 
 .filters__button {
-  min-height: 40px;
-  padding: 0.45rem 0.85rem;
-  border: 1px solid var(--border-strong);
+  min-height: 36px;
+  padding-inline: var(--space-sm);
+  border: 0;
   border-radius: var(--radius-pill);
+  background-color: transparent;
   font-family: var(--font-display);
   font-size: var(--fs-sm);
   font-weight: var(--fw-medium);
   color: var(--text-body);
+  cursor: pointer;
   transition:
-    background-color var(--dur-base) var(--ease),
-    border-color var(--dur-base) var(--ease),
-    color var(--dur-base) var(--ease);
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
 }
 
 .filters__button:hover {
-  border-color: var(--accent);
-  color: var(--accent-ink);
+  color: var(--text-strong);
 }
 
+/* The active pill takes its own pastel pair (set inline per category, §1.2a);
+   the "All" pill falls back to the violet accent fill. */
 .filters__button.is-active {
-  background-color: var(--c-emerald);
-  border-color: var(--c-emerald);
-  color: #fff;
-}
-
-.filters__count {
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
+  background-color: var(--pill-bg, var(--accent-fill));
+  color: var(--pill-ink, #fff);
 }
 
 .projects__grid {
   display: grid;
-  gap: var(--space-lg);
+  gap: var(--space-xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-@media (min-width: 58rem) {
+@media (min-width: 48rem) {
   .projects__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-lg);
   }
 }
 
 .project-card {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--border);
+  display: grid;
+  align-content: start;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+/* --- Desktop card: browser-chrome frame ----------------------------------
+   A rounded top bar with traffic-light dots and a URL bar naming the real
+   domain, over an auto-scrolling full-page capture of the live site.
+   --------------------------------------------------------------------- */
+
+.project-card__browser {
+  position: relative;
+  display: block;
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
   background-color: var(--card-bg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  text-decoration: none;
   transition:
-    border-color var(--dur-base) var(--ease),
     transform var(--dur-base) var(--ease),
     box-shadow var(--dur-base) var(--ease);
 }
 
-.project-card:hover {
-  border-color: var(--c-emerald);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+.project-card__browser:hover,
+.project-card__browser:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-float);
 }
 
-.project-card__media {
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
+.project-card__browser-chrome {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: 0.55rem 0.75rem;
   border-bottom: 1px solid var(--border);
-  background-color: var(--c-off-white-tint, #eef0ee);
+  background-color: rgb(255 255 255 / 60%);
 }
 
-.project-card__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top center;
-}
-
-.project-card__body {
-  display: grid;
-  gap: var(--space-2xs);
-  align-content: start;
-  flex: 1;
-  padding: var(--space-md);
-}
-
-.project-card__kind {
-  font-family: var(--font-display);
-  font-size: var(--fs-eyebrow);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-eyebrow);
-  text-transform: uppercase;
-  color: var(--c-emerald-deep);
-}
-
-.project-card__title {
-  font-size: var(--fs-h3);
-}
-
-.project-card__link {
-  display: inline-flex;
-  align-items: baseline;
+.project-card__browser-dots {
+  display: flex;
+  flex: none;
   gap: 0.3rem;
-  /* Negative margin balances the extra padding so the heading does not move,
-     while the link itself reaches a comfortable tap height. */
-  margin-block: -0.4rem;
-  padding-block: 0.4rem;
-  color: inherit;
-  text-decoration: none;
 }
 
-.project-card__link::after {
-  content: '';
-  position: absolute;
-  inset: 0;
+.project-card__browser-dots--none {
+  opacity: 0;
 }
 
-.project-card__title {
+.project-card__browser-dots span {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.project-card__browser-dots span:nth-child(1) {
+  background-color: rgb(246 94 94 / 78%);
+}
+
+.project-card__browser-dots span:nth-child(2) {
+  background-color: rgb(248 176 74 / 88%);
+}
+
+.project-card__browser-dots span:nth-child(3) {
+  background-color: rgb(87 187 138 / 88%);
+}
+
+.project-card__browser-url {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  flex: 1;
+  min-width: 0;
+  margin-inline: 0.25rem;
+  padding: 0.22rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background-color: rgb(255 255 255 / 78%);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-card__browser-url svg {
+  width: 0.8rem;
+  height: 0.8rem;
+  flex: none;
+}
+
+/* The scrolling window: a fixed-height, overflow-hidden frame. The height must
+   stay a plain length (not a responsive clamp) so the keyframe calculation
+   below can stop the drift exactly when the screenshot's footer reaches the
+   bottom edge of the frame. The unit value in `page-scroll` must match
+   `--frame-h` here; both are 420px. */
+.project-card__browser-scroll {
+  --frame-h: 420px;
   position: relative;
+  display: block;
+  height: var(--frame-h);
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgb(124 92 252 / 8%), transparent 40%),
+    linear-gradient(315deg, rgb(79 95 224 / 6%), transparent 45%),
+    rgb(255 255 255 / 55%);
 }
 
-.project-card__link:hover {
-  color: var(--c-emerald-deep);
+/* The screenshot is its natural full-page size, uncropped: full column width,
+   auto height, no fixed height, no object-fit that would clip it. */
+.project-card__browser-scroll img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  max-width: none;
+  will-change: transform;
+  animation: page-scroll 48s ease-in-out infinite;
 }
 
-.project-card__link-icon {
-  width: 0.85em;
-  height: 0.85em;
-  align-self: center;
-  color: var(--c-emerald);
-  transition: transform var(--dur-base) var(--ease);
+/* Pause while the card is off-screen, so lower-end devices waste nothing on a
+   scroll nobody can see. */
+.project-card__browser-scroll.is-off img {
+  animation-play-state: paused;
 }
 
-.project-card__link:hover .project-card__link-icon {
-  transform: translate(2px, -2px);
-}
-
-.project-card__summary {
-  color: var(--text-body);
-  font-size: var(--fs-sm);
-}
-
-.project-card__meta {
-  display: grid;
-  gap: var(--space-2xs);
-  margin: var(--space-2xs) 0 0;
-  padding-top: var(--space-sm);
-  border-top: 1px solid var(--border);
-  font-size: var(--fs-sm);
-}
-
-.project-card__meta-row {
-  display: grid;
-  gap: 0.25rem;
-}
-
-@media (min-width: 30rem) {
-  .project-card__meta-row {
-    grid-template-columns: 4.5rem minmax(0, 1fr);
-    gap: var(--space-2xs);
+/* Scrolls the whole page top-to-bottom and holds at the footer before easing
+   back up. `-100%` is the screenshot's own rendered height, so adding the
+   frame height stops the image exactly when its bottom edge meets the frame's
+   bottom edge — it never overshoots into blank space. */
+@keyframes page-scroll {
+  0% {
+    transform: translateY(0);
+  }
+  58% {
+    transform: translateY(calc(-100% + 420px));
+  }
+  74% {
+    transform: translateY(calc(-100% + 420px));
+  }
+  100% {
+    transform: translateY(0);
   }
 }
 
-.project-card__meta dt {
-  font-family: var(--font-display);
-  font-size: var(--fs-eyebrow);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-eyebrow);
-  text-transform: uppercase;
-  color: var(--text-muted);
+/* Phone variant of the same auto-scroll. The viewport is responsive, so the
+   stop-point uses its own `--phone-h` (set on .mobile-phone__viewport) rather
+   than the desktop card's fixed frame height. */
+@keyframes page-scroll-phone {
+  0% {
+    transform: translateY(0);
+  }
+  58% {
+    transform: translateY(calc(-100% + var(--phone-h)));
+  }
+  74% {
+    transform: translateY(calc(-100% + var(--phone-h)));
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
-.project-card__meta dd {
-  margin: 0;
+/* Refined-motion users freeze on a static frame. */
+@media (prefers-reduced-motion: reduce) {
+  .project-card__browser-scroll img,
+  .mobile-phone__screen img {
+    animation: none;
+  }
+}
+
+.project-card__corner {
+  position: absolute;
+  top: 2.6rem;
+  right: var(--space-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+/* --- Card body ----------------------------------------------------------- */
+
+.project-card__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.project-card__row .project-card__title {
+  margin-top: var(--space-sm);
+  margin-bottom: 0;
+}
+
+.project-card__title {
+  font-size: var(--fs-h4);
+}
+
+.project-card__tag {
+  display: inline-flex;
+  align-items: center;
+  margin-top: var(--space-sm);
+  padding: 0.22rem 0.7rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  line-height: 1.4;
+}
+
+/* The pastel tag chip pairs (§1.2a): amber, lavender, indigo, then teal. */
+.project-card__tag--n0 {
+  background-color: var(--chip-amber-bg);
+  color: var(--chip-amber-ink);
+}
+
+.project-card__tag--n1 {
+  background-color: var(--chip-lav-bg);
+  color: var(--chip-lav-ink);
+}
+
+.project-card__tag--n2 {
+  background-color: var(--chip-indigo-bg);
+  color: var(--chip-indigo-ink);
+}
+
+.project-card__tag--n3 {
+  background-color: var(--chip-teal-bg);
+  color: var(--chip-teal-ink);
+}
+
+.project-card__kind {
+  margin-top: var(--space-2xs);
+  margin-bottom: 0;
+  font-size: var(--fs-sm);
   color: var(--text-body);
 }
 
-.project-card__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-md);
-  margin-top: var(--space-sm);
+.project-card__summary {
+  margin-bottom: 0;
+  font-size: var(--fs-sm);
+  color: var(--text-body);
 }
 
-.project-card__action {
-  position: relative;
-  z-index: 1;
+/* The brand-coloured tool icon row (§1.2a). */
+.project-card__tools {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: var(--space-2xs) 0 0;
+}
+
+.tool-icon {
+  display: inline-flex;
+}
+
+.tool-icon svg {
+  display: block;
+}
+
+/* The small pill link at the foot of the shipped cards. */
+.project-card__visit {
   display: inline-flex;
   align-items: center;
-  min-height: 2.75rem;
-  padding-inline: 0.15rem;
+  justify-self: start;
+  gap: 0.4rem;
+  min-height: 40px;
+  margin-top: var(--space-sm);
+  padding-inline: 1.15rem;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-pill);
+  background-color: var(--glass-bg);
   font-family: var(--font-display);
   font-size: var(--fs-sm);
   font-weight: var(--fw-heading);
-  color: var(--c-emerald-deep);
-  text-decoration: underline;
-  text-underline-offset: 0.25em;
+  color: var(--text-strong);
+  text-decoration: none;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
 }
 
-.project-card__action:hover {
-  color: var(--c-black);
+.project-card__visit:hover,
+.project-card__visit:focus-visible {
+  border-color: rgb(124 92 252 / 40%);
+  color: var(--c-violet-ink);
+}
+
+.project-card__visit svg {
+  width: 1.05em;
+  height: 1.05em;
+  flex: none;
+}
+
+/* --- Mobile card: phone frame + page flip --------------------------------
+   A single phone mockup that flips between the real projects with a 3D
+   rotateY page-flip, controlled by swipe or the prev/next taps and dot
+   indicators. This replaces the desktop browser frames entirely under the
+   breakpoint; the swap is handled in React, not by stretching one frame.
+   --------------------------------------------------------------------- */
+
+.project-card--mobile {
+  gap: var(--space-2xs);
+}
+
+.mobile-phone {
+  width: min(100%, 16rem);
+  margin-inline: auto;
+}
+
+.mobile-phone__bezel {
+  position: relative;
+  padding: 0.55rem;
+  border: 1px solid rgb(22 22 28 / 12%);
+  border-radius: 2.5rem;
+  background: linear-gradient(160deg, #f6f5fa, #e9e8f0);
+  box-shadow: var(--shadow-float);
+}
+
+.mobile-phone__island {
+  position: absolute;
+  top: 1.1rem;
+  left: 50%;
+  z-index: 3;
+  width: 5rem;
+  height: 1.15rem;
+  border-radius: var(--radius-pill);
+  background-color: var(--c-dark-btn);
+  transform: translateX(-50%);
+}
+
+.mobile-phone__viewport {
+  --phone-h: clamp(24rem, 62vh, 32rem);
+  position: relative;
+  height: var(--phone-h);
+  border-radius: 2rem;
+  background-color: rgb(255 255 255 / 55%);
+  overflow: hidden;
+}
+
+.mobile-phone__screen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  will-change: transform;
+}
+
+/* The screenshot keeps its natural full-page size (width 100%, auto height,
+   no object-fit), so the auto-scroll below reveals the whole page inside the
+   phone. `page-scroll-phone` holds at the footer because it adds the phone
+   viewport's own height to the translateY, matching `--frame-h`. */
+.mobile-phone__screen img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  will-change: transform;
+  animation: page-scroll-phone 48s ease-in-out infinite;
+}
+
+/* Pause the phone auto-scroll while the card is off-screen. */
+.mobile-phone__viewport.is-off .mobile-phone__screen img {
+  animation-play-state: paused;
+}
+
+.mobile-phone__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-top: var(--space-sm);
+  margin-bottom: var(--space-2xs);
+}
+
+.mobile-phone__dots {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.mobile-phone__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--radius-pill);
+  background-color: rgb(22 22 28 / 20%);
+  transition:
+    width var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+
+.mobile-phone__dot.is-active {
+  width: 1.25rem;
+  background-color: var(--c-violet-ink);
+}
+
+.projects__more {
+  margin-top: var(--space-xl);
 }
 
 /* --- Process ------------------------------------------------------------- */
 
 .process__grid {
   display: grid;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--border);
-}
-
-@media (min-width: 46rem) {
-  .process__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 70rem) {
-  .process__grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-.process__grid > li {
-  border-bottom: 1px solid var(--border);
-}
-
-@media (min-width: 46rem) {
-  .process__grid > li {
-    border-right: 1px solid var(--border);
-  }
-}
-
-@media (min-width: 70rem) {
-  .process__grid > li {
-    border-right: 1px solid var(--border);
-  }
-
-  .process__grid > li:last-child {
-    border-right: 0;
-  }
-}
-
-.process__step {
-  display: grid;
-  gap: var(--space-2xs);
-  align-content: start;
-  height: 100%;
-  padding: var(--space-lg) var(--space-md);
-}
-
-.process__number {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 1.6rem + 1.4vw, 2.75rem);
-  font-weight: var(--fw-bold);
-  line-height: 1;
-  color: var(--c-emerald-light);
-}
-
-.process__title {
-  margin-top: var(--space-2xs);
-  font-size: var(--fs-h3);
-}
-
-.process__summary {
-  color: var(--text-strong);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-medium);
-}
-
-.process__detail {
-  color: var(--text-body);
-  font-size: var(--fs-sm);
-}
-
-/* --- Achievements -------------------------------------------------------- */
-
-.ach__list {
-  display: grid;
   gap: var(--space-lg);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.ach-item {
-  display: grid;
-  gap: var(--space-2xs);
-  padding-bottom: var(--space-lg);
-  border-bottom: 1px solid var(--border);
-}
-
-.ach-item:last-child {
-  padding-bottom: 0;
-  border-bottom: 0;
-}
-
 @media (min-width: 46rem) {
-  .ach-item {
-    grid-template-columns: minmax(0, 0.28fr) minmax(0, 0.72fr);
-    gap: var(--space-lg);
-  }
-}
-
-.ach-item__meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-2xs);
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
-}
-
-.ach-item__category {
-  font-family: var(--font-display);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-eyebrow);
-  text-transform: uppercase;
-  color: var(--c-emerald-deep);
-}
-
-.ach-item__title {
-  margin-bottom: 0.25rem;
-  font-size: var(--fs-h4);
-}
-
-.ach-item__text {
-  max-width: 62ch;
-  color: var(--text-body);
-  font-size: var(--fs-sm);
-}
-
-/* --- Call to action ------------------------------------------------------- */
-
-.cta {
-  text-align: center;
-}
-
-.cta__title {
-  max-width: 22ch;
-  margin-inline: auto;
-  margin-bottom: var(--space-md);
-}
-
-.cta__text {
-  max-width: 54ch;
-  margin-inline: auto;
-  color: var(--text-body);
-  font-size: var(--fs-lead);
-}
-
-.cta__actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-2xs);
-  margin-top: var(--space-lg);
-}
-
-.cta__actions .btn {
-  min-height: 48px;
-}
-
-/* Mobile: the CTA row reads as a left-aligned list, not a centred cluster. */
-@media (max-width: 41.999rem) {
-  .cta__actions {
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .cta__actions .btn {
-    width: 100%;
-  }
-}
-
-.cta__panel {
-  position: relative;
-  display: grid;
-  gap: var(--space-sm) var(--space-lg);
-  max-width: 60rem;
-  margin: clamp(2.5rem, 2rem + 2vw, 3.5rem) auto 0;
-  padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background-color: var(--card-bg);
-  text-align: left;
-  overflow: hidden;
-}
-
-@media (min-width: 46rem) {
-  .cta__panel {
+  .process__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 68rem) {
-  .cta__panel {
+@media (min-width: 70rem) {
+  .process__grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-md);
   }
 }
 
-.cta__panel-row {
+.process__step {
+  position: relative;
   display: grid;
-  gap: 0.25rem;
+  align-content: start;
+  gap: var(--space-2xs);
+  height: 100%;
+  padding: var(--space-lg);
 }
 
-.cta__panel-key {
+/* The "01"-style step badge. These are step numbers, explicitly allowed by the
+   brief, not fictional stats. */
+.process__badge {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
   font-family: var(--font-display);
-  font-size: var(--fs-eyebrow);
+  font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
   letter-spacing: var(--ls-eyebrow);
-  text-transform: uppercase;
-  color: var(--c-emerald-light);
+  color: var(--text-muted);
+}
+.process__title {
+  margin-bottom: var(--space-3xs);
+  font-size: var(--fs-h4);
 }
 
-.cta__panel-val {
-  margin: 0;
-  font-size: var(--fs-sm);
-  color: var(--text-strong);
-}
-
-.cta__mark {
-  position: absolute;
-  right: var(--space-md);
-  bottom: var(--space-md);
-  color: var(--border-strong);
-  pointer-events: none;
-}
-
-.cta__direct {
-  margin-top: var(--space-lg);
+.process__summary {
+  margin-bottom: 0;
   font-size: var(--fs-sm);
   color: var(--text-body);
 }
 
-.cta__direct a {
-  /* Comfortable tap target without shifting the line box. */
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.75rem;
-  padding-block: 0.35rem;
-  color: var(--c-emerald-light);
-  text-underline-offset: 0.2em;
-}
-
 /* --- Contact -------------------------------------------------------------- */
 
+/* The section is a normal light section; only this local orb is tinted violet,
+   per the brief. The global orbs stay cool so the page keeps one ground.
+
+   The clipping wrapper is what stops the orb bleeding past the section edge
+   from creating horizontal scroll. It carries no focusable children, so
+   clipping cannot cut off a focus ring: the content sits outside it in
+   .container, which is a later sibling and paints above. */
+.contact__glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* `.orb--local` sets no size, so this orb supplies its own. */
+.contact__orb {
+  top: 50%;
+  right: -12rem;
+  width: 34rem;
+  height: 34rem;
+  margin-top: -17rem;
+  background-color: rgb(124 92 252 / 22%);
+}
+
+@media (max-width: 47.99rem) {
+  .contact__orb {
+    right: -14rem;
+    width: 24rem;
+    height: 24rem;
+    margin-top: -12rem;
+  }
+}
+
+/* Left column carries the heading, supporting copy and contact details; the
+   form sits on the right, per the brief. */
 .contact__grid {
   display: grid;
   gap: var(--space-xl);
@@ -960,7 +1247,7 @@
 
 @media (min-width: 64rem) {
   .contact__grid {
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
     gap: var(--space-2xl);
     align-items: start;
   }
@@ -969,51 +1256,6 @@
 .contact__form {
   display: grid;
   gap: var(--space-md);
-}
-
-/* Dark band, so the form controls use the dark palette. */
-.contact .field__label {
-  color: var(--text-strong);
-}
-
-.contact .field__control {
-  border-color: var(--border-strong);
-  background-color: color-mix(in srgb, var(--c-black) 40%, transparent);
-  color: var(--c-off-white);
-}
-
-.contact .field__control::placeholder {
-  color: #8a9198;
-}
-
-.contact .field__control:hover {
-  border-color: var(--c-emerald-light);
-}
-
-.contact .field__control:focus {
-  border-color: var(--c-emerald-light);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-emerald-light) 30%, transparent);
-}
-
-.contact .field__select svg {
-  color: var(--c-on-dark-muted, var(--on-dark-muted));
-}
-
-.contact .field__optional,
-.contact .field__hint {
-  color: var(--on-dark-muted);
-}
-
-.contact .field--invalid .field__control {
-  border-color: #ff8f85;
-}
-
-.contact .field--invalid .field__control:focus {
-  box-shadow: 0 0 0 3px rgba(255, 143, 133, 0.28);
-}
-
-.contact .field__error {
-  color: #ffb3ac;
 }
 
 .contact__submit {
@@ -1032,10 +1274,7 @@
 }
 
 .contact__card {
-  padding: var(--space-md);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background-color: var(--card-bg);
+  padding: var(--space-lg);
 }
 
 .contact__card-title {
@@ -1052,9 +1291,9 @@
 .contact__links {
   display: grid;
   gap: var(--space-2xs);
-  list-style: none;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 .contact__link {
@@ -1063,7 +1302,7 @@
   align-items: center;
   gap: var(--space-sm);
   min-height: 56px;
-  padding: var(--space-2xs) var(--space-2xs);
+  padding: var(--space-2xs);
   border-radius: var(--radius-md);
   text-decoration: none;
   color: var(--text-strong);
@@ -1071,17 +1310,26 @@
 }
 
 .contact__link:hover {
-  background-color: color-mix(in srgb, var(--c-emerald-light) 8%, transparent);
+  background-color: rgb(255 255 255 / 60%);
+}
+
+/* Not interactive, so no hover affordance. */
+.contact__link--static {
+  cursor: default;
+}
+
+.contact__link--static:hover {
+  background-color: transparent;
 }
 
 .contact__link-icon {
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--border);
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-md);
-  color: var(--c-emerald-light);
+  background-color: var(--chip-lav-bg);
+  color: var(--chip-lav-ink);
 }
 
 .contact__link-label {
@@ -1095,14 +1343,42 @@
   font-family: var(--font-display);
   font-size: var(--fs-sm);
   font-weight: var(--fw-heading);
+  overflow-wrap: anywhere;
 }
 
 /* --- Footer --------------------------------------------------------------- */
 
 .footer {
+  --text-strong: #000;
+  --text-body: #000;
+  --text-muted: #000;
+  position: relative;
+  overflow: hidden;
   padding-block: var(--space-xl) var(--space-lg);
-  background-color: var(--c-black);
-  border-top: 1px solid var(--c-black-line);
+}
+
+/* The page stays one ground; this local orb lets the violet glow from Contact
+   keep bleeding down into the footer instead of stopping at the section edge.
+   It sits behind the grid (which is painted above with its own z-index). */
+.footer__glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.footer__orb {
+  top: -18rem;
+  right: -10rem;
+  width: 40rem;
+  height: 40rem;
+  background-color: rgb(124 92 252 / 16%);
+}
+
+.footer > .container {
+  position: relative;
+  z-index: 1;
 }
 
 .footer__grid {
@@ -1137,15 +1413,15 @@
   font-weight: var(--fw-bold);
   letter-spacing: var(--ls-eyebrow);
   text-transform: uppercase;
-  color: var(--c-emerald-light);
+  color: var(--text-muted);
 }
 
 .footer__list {
   display: grid;
   gap: 0.1rem;
-  list-style: none;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 .footer__list a {
@@ -1159,7 +1435,7 @@
 }
 
 .footer__list a:hover {
-  color: var(--c-off-white);
+  color: var(--text-strong);
 }
 
 .footer__social {
@@ -1167,8 +1443,8 @@
   flex-wrap: wrap;
   gap: var(--space-2xs);
   margin-top: var(--space-sm);
-  list-style: none;
   padding: 0;
+  list-style: none;
 }
 
 .footer__social-link {
@@ -1177,16 +1453,16 @@
   width: 44px;
   height: 44px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   color: var(--text-muted);
   transition:
-    border-color var(--dur-base) var(--ease),
-    color var(--dur-base) var(--ease);
+    color var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
 }
 
 .footer__social-link:hover {
-  border-color: var(--c-emerald-light);
-  color: var(--c-emerald-light);
+  border-color: var(--c-violet);
+  color: var(--accent-ink);
 }
 
 .footer__location {
@@ -1224,7 +1500,7 @@
 }
 
 .footer__top-link:hover {
-  color: var(--c-off-white);
+  color: var(--text-strong);
 }
 
 .footer__link-arrow {

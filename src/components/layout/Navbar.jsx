@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowRight, Menu, X } from 'lucide-react'
+import { ArrowUpRight, Menu, X } from 'lucide-react'
 
 import Logo from '../brand/Logo.jsx'
 import Button from '../ui/Button.jsx'
@@ -14,6 +14,10 @@ import { brand, ctaNavLabel, navItems } from '../../data/site.js'
  *
  * An `IntersectionObserver` marks which section is currently in view, so the
  * active link can be announced with `aria-current`.
+ *
+ * The bar itself is a frosted glass surface with a centred pill group of links,
+ * per the brief. The pill is a single `aria-current` target rather than a set of
+ * tabs, so each link stays an ordinary navigation link.
  */
 export default function Navbar() {
   const [open, setOpen] = useState(false)
@@ -93,7 +97,7 @@ export default function Navbar() {
   }, [])
 
   return (
-    <header className={`nav on-dark ${scrolled ? 'nav--scrolled' : ''}`.trim()}>
+    <header className={`nav ${scrolled ? 'nav--scrolled' : ''}`.trim()}>
       <div className="container nav__inner">
         <a
           className="nav__brand"
@@ -117,7 +121,7 @@ export default function Navbar() {
         </nav>
 
         <div className="nav__actions">
-          <Button href="#contact" icon={ArrowRight}>
+          <Button href="#contact" icon={ArrowUpRight}>
             {ctaNavLabel}
           </Button>
         </div>
@@ -163,7 +167,7 @@ export default function Navbar() {
           <Button
             href="#contact"
             size="lg"
-            icon={ArrowRight}
+            icon={ArrowUpRight}
             onClick={() => setOpen(false)}
           >
             {ctaNavLabel}

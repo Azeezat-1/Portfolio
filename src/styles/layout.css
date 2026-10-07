@@ -1,4 +1,10 @@
-/* Containers, sections, section headings and the dark band backdrop. */
+/*
+ * Containers, sections, section headings, blurred orbs and the reveal
+ * animation.
+ *
+ * Every section shares the same pale ground, so the page reads as one airy
+ * surface with soft colour floating behind it rather than as stacked bands.
+ */
 
 .container {
   width: 100%;
@@ -9,33 +15,25 @@
 
 .section {
   position: relative;
-  padding-block: clamp(4rem, 3rem + 5vw, 7rem);
-  background-color: var(--surface);
+  /* Sections are transparent so the fixed orbs on <body> show through. */
+  padding-block: clamp(3.5rem, 2.5rem + 4vw, 5rem); /* 64-80px rhythm */
   color: var(--text-body);
 }
 
-/* A hairline between two adjacent bands of the same colour. Achievements and
-   CTA are both dark, so without this they read as one long slab. */
-.section + .section.same-surface::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto;
-  height: 1px;
-  background-color: var(--border);
+/* Section content sits above the decorative orbs. */
+.section > .container {
+  position: relative;
+  z-index: 1;
 }
 
 .section__head {
   max-width: var(--container-narrow);
-  margin-bottom: clamp(2.5rem, 2rem + 2.5vw, 3.5rem);
+  margin-bottom: clamp(2rem, 1.5rem + 2vw, 3rem);
 }
 
 .section__title {
   margin-bottom: var(--space-sm);
-}
-
-.section__lede {
-  font-size: var(--fs-lead);
-  color: var(--text-body);
+  color: var(--text-strong);
 }
 
 /* A split heading puts supporting text beside the title instead of under it. */
@@ -57,82 +55,96 @@
   }
 }
 
-/* Section content sits above the decorative backdrop. */
-.section > .container {
-  position: relative;
-  z-index: 1;
-}
-
-/* --- Dark band backdrop --------------------------------------------------
-   Two soft emerald glows behind a hairline grid. Decorative only, hidden
-   from assistive tech by the markup.
+/* --- Blurred orbs --------------------------------------------------------
+   Large, soft, barely-visible colour blobs. Fixed to the viewport and marked
+   decorative so they scroll slowly behind the content instead of moving with
+   it, which gives depth without any layout cost.
    --------------------------------------------------------------------- */
 
-.band-bg {
-  position: absolute;
+.orbs {
+  position: fixed;
   inset: 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
 }
 
-.band-bg__glow {
+.orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.16;
+  filter: blur(90px);
 }
 
-.band-bg__glow--one {
-  top: -22%;
-  left: -8%;
-  width: 30rem;
-  height: 30rem;
-  background-color: var(--c-emerald);
+/* Cool white/silver glow near the top of the page. */
+.orb--silver {
+  top: -18rem;
+  left: -10rem;
+  width: 46rem;
+  height: 46rem;
+  background-color: var(--orb-silver);
+  opacity: 0.5;
 }
 
-.band-bg__glow--two {
-  right: -12%;
-  bottom: -24%;
-  width: 26rem;
-  height: 26rem;
-  background-color: var(--c-emerald);
-  opacity: 0.1;
+/* A second silver bloom on the opposite side, so the top of the page has light
+   coming from both corners. */
+.orb--silver-alt {
+  top: 8rem;
+  right: -14rem;
+  width: 34rem;
+  height: 34rem;
+  background-color: rgb(255 255 255 / 70%);
+  opacity: 0.45;
 }
 
-.band-bg__grid {
+/* The violet glow behind the lower half of the page. The contact section also
+   declares its own local orb so the glow lands where the brief asks for it. */
+.orb--violet {
+  bottom: -20rem;
+  left: 20%;
+  width: 44rem;
+  height: 44rem;
+  background-color: var(--orb-violet);
+}
+
+@media (max-width: 47.99rem) {
+  .orb {
+    filter: blur(60px);
+  }
+
+  .orb--silver {
+    width: 28rem;
+    height: 28rem;
+  }
+
+  .orb--silver-alt {
+    width: 22rem;
+    height: 22rem;
+  }
+
+  .orb--violet {
+    width: 26rem;
+    height: 26rem;
+  }
+}
+
+/* A locally positioned orb for a single section, e.g. the violet glow behind
+   the contact form. Sits inside the section, so it scrolls with it. */
+.orb--local {
   position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(
-      to right,
-      color-mix(in srgb, var(--c-off-white) 5%, transparent) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--c-off-white) 5%, transparent) 1px,
-      transparent 1px
-    );
-  background-size: 72px 72px;
-  /* Fade the grid out towards the edges so it never competes with the text. */
-  mask-image: radial-gradient(
-    ellipse 80% 60% at 50% 40%,
-    #000 30%,
-    transparent 75%
-  );
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* --- Reveal -------------------------------------------------------------
-   Scroll-in is a short fade and rise. Kept minimal per the brief.
+   A short fade and rise, kept minimal per the brief.
    --------------------------------------------------------------------- */
 
 [data-reveal] {
   opacity: 0;
   transform: translateY(14px);
   transition:
-    opacity var(--dur-base) var(--ease),
-    transform var(--dur-base) var(--ease);
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -145,7 +157,7 @@
 
 .grid {
   display: grid;
-  gap: var(--space-lg);
+  gap: var(--space-md); /* 16-20px between cards */
 }
 
 @media (min-width: 46rem) {
@@ -154,12 +166,26 @@
   }
 }
 
+/* Three and four column grids step through two columns first, so cards keep a
+   readable measure on a tablet instead of staying full-bleed until desktop. */
+@media (min-width: 34rem) {
+  .grid--3,
+  .grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (min-width: 60rem) {
   .grid--3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
 
+/* Four columns need the widest breakpoint: at 64rem each card is still about
+   240px wide, which fits a 32px padded card with a 40px chip. */
+@media (min-width: 64rem) {
   .grid--4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-sm);
   }
 }

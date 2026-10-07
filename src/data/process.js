@@ -1,9 +1,10 @@
 /**
- * The four-step process, numbered as on the reference sites.
+ * The four-step process.
  *
- * `summary` is the short line under the step title; `detail` is the fuller
- * explanation. Both are written to read as organised and reliable rather than
- * as a sales pitch.
+ * `number` is the "01"-style step badge the brief asks for — these are step
+ * numbers, not stats, so they are allowed on the page. `summary` is the short
+ * line under the step title; `detail` is the fuller explanation. Both read as
+ * organised and reliable rather than as a sales pitch.
  */
 
 export const processSteps = [
@@ -25,7 +26,7 @@ export const processSteps = [
   },
   {
     number: '03',
-    title: 'Design and Development',
+    title: 'Design & Development',
     summary:
       'Building the thing, with progress you can look at as it happens.',
     detail:
@@ -33,7 +34,7 @@ export const processSteps = [
   },
   {
     number: '04',
-    title: 'Refinement and Delivery',
+    title: 'Refinement & Delivery',
     summary:
       'Testing on real devices, fixing what breaks, then handing it over with instructions.',
     detail:

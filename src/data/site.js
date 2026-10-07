@@ -1,46 +1,39 @@
-/**
- * Identity, navigation and contact details.
- *
- * Everything here is safe to edit. The contact values are PLACEHOLDERS and
- * must be replaced before the site goes live.
- */
-
 export const brand = {
   /** Lowercase wordmark, as specified in the brief. */
   name: 'zeedev',
   /** Compact mark. */
   compact: 'ZDEV',
-  /** Full name, used for the document title and legal line. */
+  /** Full name, used for the document title, hero H1 and legal line. */
   nameDisplay: 'Azeezat Yusuf',
-  role: 'Full-stack software developer',
+  /** Violet accent subheading under the name in the hero. */
+  role: 'Software Developer',
   shortDescription:
-    'I build websites and web applications, front end and back end, using React, WordPress and the MERN or LAMP stack depending on what the project needs.',
+    'I build responsive websites and web applications, front end and back end, using HTML, CSS, JavaScript and React. I work in either the MERN or the LAMP stack depending on the project, build and customise WordPress sites, and can turn a Figma design into a fully built, live website.',
 }
 
+export const heroEyebrow = "Hello, I'm"
+
+/**
+ * Nav order per the brief: Home, About, Skills, Projects, Contact.
+ *
+ * Process is a section on the page but deliberately not a nav item. Each `id`
+ * must match a section's DOM id in App.jsx.
+ */
 export const navItems = [
+  { id: 'top', label: 'Home' },
   { id: 'about', label: 'About' },
   { id: 'skills', label: 'Skills' },
   { id: 'projects', label: 'Projects' },
-  { id: 'services', label: 'Services' },
   { id: 'contact', label: 'Contact' },
 ]
 
-export const ctaNavLabel = "Let's work together"
-
-/**
- * Availability shown in the hero and the closing call to action.
- *
- * EDIT: confirm this is still accurate before launch.
- */
-export const availability = {
-  status: 'Open to new projects',
-  detail: 'Available for new work',
-}
+/** Label for the dark pill button in the nav. */
+export const ctaNavLabel = 'Start a Conversation'
 
 /**
  * Direct contact details.
  *
- * `email` and `phone` are real. Keep them accurate.
+ * These are real. Keep them accurate.
  *
  * `phone` must be digits and the country code only, with no spaces or
  * punctuation. It generates the tap-to-call link and the WhatsApp link, so
@@ -51,15 +44,12 @@ export const contactDetails = {
   phone: '+2348131663860',
   /** The same number, spaced to read. Cosmetic only. */
   phoneDisplay: '+234 813 166 3860',
+  /**
+   * PLACEHOLDER: the brief asks for a location in the contact list. Replace
+   * this with the city and country you actually work from.
+   */
   location: 'Nigeria',
 }
-
-/** Quick facts used in the hero, all factual and verifiable. */
-export const heroFacts = [
-  { key: 'Stack', value: 'MERN or LAMP, whichever fits' },
-  { key: 'Work', value: 'Websites and web applications' },
-  { key: 'Clients', value: 'Individuals, businesses, organizations' },
-]
 
 /**
  * Social and contact links.

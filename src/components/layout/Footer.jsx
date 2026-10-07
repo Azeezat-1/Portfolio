@@ -5,15 +5,22 @@ import Icon from '../ui/Icon.jsx'
 import { brand, contactDetails, navItems, socialLinks } from '../../data/site.js'
 
 /**
- * Footer: logo and a short description, section links, direct contact, and a
- * copyright line. Deliberately no extra sections, per the brief.
+ * Footer: brand on one side, nav menu, contact details, and a copyright line.
+ *
+ * The soft violet glow from the Contact section keeps bleeding down behind the
+ * footer instead of cutting off, so the bottom of the page keeps its depth.
+ * Deliberately nothing beyond that, per the brief.
  */
 export default function Footer() {
   const year = new Date().getFullYear()
   const links = socialLinks.filter((link) => link.id !== 'email')
 
   return (
-    <footer className="footer on-dark">
+    <footer className="footer">
+      <div className="footer__glow" aria-hidden="true">
+        <span className="orb orb--local footer__orb" />
+      </div>
+
       <div className="container">
         <div className="footer__grid">
           <div className="footer__brand">
@@ -24,7 +31,7 @@ export default function Footer() {
           </div>
 
           <nav className="footer__col" aria-label="Footer">
-            <h2 className="footer__col-title">Sections</h2>
+            <h2 className="footer__col-title">Menu</h2>
             <ul className="footer__list">
               {navItems.map((item) => (
                 <li key={item.id}>
@@ -57,7 +64,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noreferrer noopener"
                   >
-                    <Icon name={link.icon} size={18} />
+                    <Icon name={link.icon} size={18} aria-hidden="true" />
                     <span className="sr-only">
                       {link.label} (opens in a new tab)
                     </span>

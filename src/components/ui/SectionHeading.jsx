@@ -17,6 +17,13 @@ export default function SectionHeading({
 }) {
   const Heading = `h${level}`
 
+  /**
+   * Sections can drop their large title and keep only the eyebrow. The eyebrow
+   * then becomes the heading itself rather than sitting beside an empty one,
+   * so the section keeps its outline level and its `aria-labelledby` target.
+   */
+  const heading = title ?? eyebrow
+
   return (
     <div
       className={[
@@ -28,10 +35,15 @@ export default function SectionHeading({
         .join(' ')}
     >
       <div>
-        {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
-        <Heading className="section__title" id={id}>
-          {title}
-        </Heading>
+        {eyebrow && title ? <p className="eyebrow">{eyebrow}</p> : null}
+        {heading ? (
+          <Heading
+            className={title ? 'section__title' : 'section__title eyebrow'}
+            id={id}
+          >
+            {heading}
+          </Heading>
+        ) : null}
       </div>
 
       {lede ? (

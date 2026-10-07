@@ -1,75 +1,60 @@
+import arriyaadhShot from '../assets/projects/arriyaadh.png'
+import grandeurShot from '../assets/projects/grandeur.png'
+
 /**
- * Project data.
+ * Selected work.
  *
- * Each entry uses an actual screenshot captured from the home page of the live
- * site, stored in `public/images/`. Point `screenshot` at a new file to swap the
- * image. A project with no screenshot shows no image rather than a mockup.
+ * Two real, shipped projects with live URLs. The brief supplies both
+ * descriptions directly and says to use them as actual data, not placeholders.
+ * Full-page screenshots are captured from the home page of each live site and
+ * live in `src/assets/projects/` (imported above so Vite bundles them);
+ * `domain` is shown in the browser-chrome URL bar on the desktop card, and
+ * `toolkit` drives the brand-coloured icon row.
  *
- * `categories` drive the filter bar in the Projects section, and must match an
- * existing filter or the project will only appear under All.
+ * Do not invent project names, descriptions, clients or results. Copy an
+ * existing entry to add real work.
  *
- * Both entries are my own shipped projects, with live URLs and real screenshots
- * captured from the home page of each live site. Only work that has actually
- * been shipped is listed: add more entries with real work, never placeholders.
- *
- * Do not invent project names, descriptions, clients or results.
+ * `categories` drives the filter bar. Every category must match an existing
+ * filter, or the project will only appear under All.
  *
  * Front-end stack entries were verified against each live JavaScript bundle
  * (React, React Router, Axios on a "/api" base). Node, Express and MongoDB are
- * part of my build but cannot be confirmed from a front-end bundle alone. // EDIT
+ * part of the build but cannot be confirmed from a front-end bundle alone.
  */
 
 export const projects = [
   {
     id: 'ar-riyaadh-academy',
     name: 'Ar-Riyaadh Academy',
+    /** Short pastel chip under the title (§1.2a). */
+    tag: 'MERN',
+    oneLiner:
+      'Islamic & Arabic learning platform for women and girls — full build, front end and back end.',
     categories: ['Full-stack', 'React', 'MERN'],
-    kind: 'Learning platform',
     live: true,
-    /** Real screenshot captured from the live site. */
-    screenshot: '/images/ar-riyaadh-academy.png',
+    /** Full-page capture of the live homepage, from top to footer. */
+    screenshot: arriyaadhShot,
+    /** Shown in the browser-chrome URL bar on the desktop card. */
+    domain: 'arriyaadh.com',
+    /** IDs into the brand-coloured tool icons (see ToolIcon.jsx). */
+    toolkit: ['react', 'node', 'express', 'mongodb'],
     url: 'https://arriyaadh.com/',
     repo: null,
-    summary:
-      'An Islamic and Arabic learning platform for women and girls, covering Qur\'an, Hadith, Tafsir, Arabic language and general Islamic education, with classes, lectures, Hijaamah instruction and a homeschooling section.',
-    detail:
-      'Two things had to work well: presenting a lot of structured course information without overwhelming a visitor, and routing each prospective student into the right class. I built the React front end and the API behind it.',
-    role: 'Designed, built and shipped it myself, front end and back end',
-    // Verified from the live bundle: React, React Router (useNavigate) and an
-    // axios instance on baseURL "/api".
-    stack: ['React', 'Vite', 'React Router', 'Axios', 'Node.js', 'Express', 'MongoDB'],
-    features: [
-      'Structured content across classes, lectures, homeschooling and testimonials',
-      'Class catalogue showing audience and learning focus per subject',
-      'Axios API layer on /api covering classes, lectures, testimonials, homeschooling and contact',
-    ],
   },
   {
     id: 'grandeur',
     name: 'Grandeur',
+    tag: 'E-commerce',
+    oneLiner:
+      'Bespoke men\'s fashion and tailoring site — Nigerian native wear, kaftans, agbada and suits.',
     categories: ['Full-stack', 'React', 'E-commerce'],
-    kind: 'Fashion e-commerce and training',
     live: true,
-    /** Real screenshot captured from the live site. */
-    screenshot: '/images/grandeur.png',
+    screenshot: grandeurShot,
+    domain: 'grandeur-fd77.vercel.app',
+    toolkit: ['react', 'react-router', 'node', 'mongodb'],
     url: 'https://grandeur-fd77.vercel.app/',
     repo: null,
-    summary:
-      'A bespoke men\'s fashion and tailoring site selling Nigerian native wear, kaftans, agbada and suits, which also advertises fashion design and tailoring training.',
-    detail:
-      'One site doing two jobs: selling made-to-measure clothing and recruiting students into the training program. I built the storefront and the training section together.',
-    role: 'Designed, built and shipped it myself, front end and back end',
-    // Verified from the live bundle: React, React Router, an axios instance on
-    // baseURL "/api", and cart and checkout state in the client bundle.
-    stack: ['React', 'Vite', 'React Router', 'Axios', 'Node.js', 'Express', 'MongoDB'],
-    features: [
-      'Catalogue with category filtering and search',
-      'Product detail pages for made-to-measure pieces',
-      'Cart and checkout that records orders',
-      'Training section with an application call to action',
-    ],
   },
-
 ]
 
 /** Filter categories, ordered. Derived so a new project's tags appear here. */

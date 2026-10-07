@@ -1,17 +1,24 @@
-import { TagList } from './Tag.jsx'
+import Icon from './Icon.jsx'
 
 /**
- * One skill category: the title, how Azeezat actually uses it, and the
- * technologies as text tags.
+ * One skill: a pastel icon chip, a title and a one-line description.
+ *
+ * The brief asks for exactly those three things and explicitly rules out a
+ * technology logo wall, so there is no stack list and no link on the card:
+ * each one explains what she does rather than naming tools.
+ *
+ * `chip` picks the colour pair, rotated by the parent so adjacent cards never
+ * share one.
  */
-export default function SkillCard({ title, summary, items }) {
+export default function SkillCard({ title, description, icon, chip = 0 }) {
   return (
     <li className="card skill-card">
-      <div className="skill-card__body">
-        <h3 className="card__title">{title}</h3>
-        <p className="card__text skill-card__text">{summary}</p>
-        <TagList items={items} label={`${title} technologies`} />
-      </div>
+      <span className={`chip chip--n${chip}`}>
+        <Icon name={icon} aria-hidden="true" />
+      </span>
+
+      <h3 className="skill-card__title">{title}</h3>
+      <p className="skill-card__text">{description}</p>
     </li>
   )
 }
