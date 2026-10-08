@@ -46,7 +46,7 @@ export default function Footer() {
 
             <ul className="footer__list">
               <li>
-                <a href={`mailto:${contactDetails.email}`}>{contactDetails.email}</a>
+                <a href={contactDetails.emailHref}>{contactDetails.email}</a>
               </li>
               <li>
                 <a href={`tel:${contactDetails.phone}`}>

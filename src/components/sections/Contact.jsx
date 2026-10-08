@@ -165,7 +165,7 @@ export default function Contact() {
 
               <ul className="contact__links">
                 <li>
-                  <a className="contact__link" href={`mailto:${contactDetails.email}`}>
+                  <a className="contact__link" href={contactDetails.emailHref}>
                     <span className="contact__link-icon" aria-hidden="true">
                       <Icon name="mail" size={18} />
                     </span>
