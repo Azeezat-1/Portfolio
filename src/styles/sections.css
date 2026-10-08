@@ -277,8 +277,8 @@
   }
 }
 
-/* The right column: a large rounded glass frame holding the preview, with the
-   stat badges overlapping its lower edge. */
+/* The right column: a large rounded glass frame holding the portrait photo,
+   with the short text label overlapping its lower edge. */
 .hero__aside {
   position: relative;
   min-width: 0;
@@ -287,7 +287,7 @@
 .hero__frame {
   position: relative;
   min-width: 0;
-  padding: var(--space-md);
+  padding: 0;
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg); /* big surfaces, 24px */
   background-color: var(--glass-fallback);
@@ -304,42 +304,47 @@
   }
 }
 
-/* The three window dots, drawn as CSS rather than shipped as an image. */
-.hero__frame-bar {
+/* A portrait-oriented photo (4:5) filling the glass frame. */
+.hero__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+/* The plain-language pill row under the hero copy (v11). The pills reuse the
+   four pastel chip pairs, so adjacent pills never share a colour. */
+.hero__pills {
   display: flex;
-  gap: 0.35rem;
-  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  margin: var(--space-md) 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-.hero__frame-dot {
-  width: 0.55rem;
-  height: 0.55rem;
-  border-radius: 50%;
-  background-color: rgb(22 22 28 / 12%);
+.hero__pill {
+  padding: 0.34rem 0.85rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  line-height: 1.4;
 }
-
-.hero__code {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  line-height: 1.7;
-  /* Long lines scroll rather than widen the page. */
-  overflow-x: auto;
-}
-
-/* Syntax colours for the decorative preview. Keywords and property names in
-   the violet accent, string values in the amber/peach tone, bracket
-   punctuation in the teal tone. All reuse the §1.2 chip inks — no new hue. */
-.hero__code .tok-kw,
-.hero__code .tok-prop {
-  color: var(--c-violet-ink);
-}
-
-.hero__code .tok-str {
+.hero__pill:nth-child(4n + 1) {
+  background-color: var(--chip-amber-bg);
   color: var(--chip-amber-ink);
 }
-
-.hero__code .tok-punct {
+.hero__pill:nth-child(4n + 2) {
+  background-color: var(--chip-lav-bg);
+  color: var(--chip-lav-ink);
+}
+.hero__pill:nth-child(4n + 3) {
+  background-color: var(--chip-indigo-bg);
+  color: var(--chip-indigo-ink);
+}
+.hero__pill:nth-child(4n + 4) {
+  background-color: var(--chip-teal-bg);
   color: var(--chip-teal-ink);
 }
 
@@ -394,8 +399,8 @@
 
 /* --- About --------------------------------------------------------------- */
 
-/* Writing beside a supporting visual. No stat row or counters: the prose is
-   the whole story, and the visual is a workspace mockup, not a metrics panel.
+/* Writing beside a supporting photo. No stat row or counters: the prose and
+   the promises are the whole story.
    --------------------------------------------------------------------- */
 .about__grid {
   display: grid;
@@ -420,15 +425,14 @@
   color: var(--text-body);
 }
 
-/* The workspace mockup: a laptop with an editor in the site's syntax colours,
-   a notebook and a mug, inside a frosted glass frame. */
+/* The supporting photo, inside a frosted frame with a light cool grade. */
 .about__media {
   min-width: 0;
 }
 
 .about__frame {
   position: relative;
-  padding: clamp(var(--space-lg), 4vw, var(--space-xl));
+  padding: 0;
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
   background-color: var(--glass-fallback);
@@ -446,9 +450,8 @@
   }
 }
 
-/* A faint cool/blue grade so the mockup sits against the lavender-grey ground
-   rather than looking pasted in, mirroring the colour treat the brief gives
-   the About photograph. */
+/* A faint cool/blue grade over the photo, per the brief's "light, slightly
+   cool color grade", so it sits naturally against the lavender-grey ground. */
 .about__frame::after {
   content: '';
   position: absolute;
@@ -457,187 +460,71 @@
   pointer-events: none;
   background: linear-gradient(
     135deg,
-    rgb(90 120 255 / 5%),
+    rgb(90 120 255 / 6%),
     transparent 55%,
-    rgb(90 120 255 / 3%)
+    rgb(90 120 255 / 4%)
   );
 }
 
-.about__desk {
-  position: relative;
-  padding-bottom: 1.1rem;
+.about__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 }
 
-.about__laptop {
-  width: min(100%, 30rem);
-  margin-inline: auto;
+/* The four plain-language promises under the copy — each a small outline icon
+   in a pastel chip, a title and one line. Qualities, not statistics. */
+.about__promises {
+  margin-top: var(--space-lg);
 }
 
-.about__screen {
-  padding: var(--space-xs);
-  border: 1px solid rgb(22 22 28 / 10%);
-  border-radius: var(--radius-md);
-  background-color: rgb(255 255 255 / 82%);
-  box-shadow: var(--shadow-md);
+.about__promise-list {
+  display: grid;
+  gap: var(--space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-@media (min-width: 60rem) {
-  .about__screen {
-    padding: var(--space-sm);
+@media (min-width: 48rem) {
+  .about__promise-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-.about__screen-bar {
+.about__promise {
   display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  margin-bottom: var(--space-2xs);
+  align-items: flex-start;
+  gap: var(--space-sm);
 }
 
-.about__dot {
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 50%;
-  background-color: rgb(22 22 28 / 14%);
-}
-
-.about__dot:nth-child(1) {
-  background-color: rgb(246 94 94 / 75%);
-}
-
-.about__dot:nth-child(2) {
-  background-color: rgb(248 176 74 / 85%);
-}
-
-.about__dot:nth-child(3) {
-  background-color: rgb(87 187 138 / 85%);
-}
-
-.about__screen-title {
-  margin-left: auto;
-  font-family: var(--font-body);
-  font-size: 0.6rem;
-  color: var(--text-muted);
-}
-
-.about__editor {
-  border-radius: calc(var(--radius-md) - 6px);
-  background-color: #fafafc;
-  overflow: hidden;
-}
-
-.about__editor-line {
+.about__promise-copy {
   display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr);
-  gap: var(--space-xs);
-  padding: 0.22rem var(--space-sm);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  line-height: 1.55;
-  white-space: nowrap;
+  gap: var(--space-3xs);
+  padding-top: 0.35rem;
+}
+
+.about__promise-title {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
   color: var(--text-strong);
 }
 
-.about__ln {
-  text-align: right;
-  color: rgb(22 22 28 / 28%);
-  user-select: none;
+.about__promise-detail {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  color: var(--text-body);
 }
 
-/* The same four syntax colours as the hero preview, reused here. */
-.about__kw,
-.about__prop {
-  color: var(--c-violet-ink);
-}
-
-.about__str {
-  color: var(--chip-amber-ink);
-}
-
-.about__br {
-  color: var(--chip-teal-ink);
-}
-
-.about__pc {
-  color: rgb(22 22 28 / 60%);
-}
-
-.about__deck {
-  height: 0.95rem;
-  margin-top: -0.35rem;
-  border: 1px solid rgb(22 22 28 / 10%);
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-  background: linear-gradient(180deg, #f2f1f6, #e9e8ef);
-}
-
-.about__deck::after {
-  content: '';
-  display: block;
-  width: 5.5rem;
-  height: 0.28rem;
-  margin-inline: auto;
-  border-radius: var(--radius-pill);
-  background-color: rgb(22 22 28 / 14%);
-  transform: translateY(0.2rem);
-}
-
-/* Two small desk accents at the edges of the laptop: a notebook and a mug. */
-.about__note {
-  position: absolute;
-  left: 0.75rem;
-  bottom: 0;
-  display: grid;
-  gap: 0.28rem;
-  width: 3.6rem;
-  padding: 0.5rem;
-  border: 1px solid rgb(22 22 28 / 8%);
-  border-radius: var(--radius-sm);
-  background-color: rgb(255 255 255 / 78%);
-  box-shadow: var(--shadow-sm);
-}
-
-.about__note-line {
-  height: 0.18rem;
-  border-radius: var(--radius-pill);
-  background-color: rgb(124 92 252 / 30%);
-}
-
-.about__note-line:nth-child(2) {
-  background-color: rgb(22 22 28 / 14%);
-}
-
-.about__note-line:nth-child(3) {
-  background-color: rgb(22 22 28 / 10%);
-}
-
-.about__mug {
-  position: absolute;
-  right: 1rem;
-  bottom: 0.35rem;
-  width: 1.5rem;
-  height: 1.7rem;
-  border: 1px solid rgb(22 22 28 / 8%);
-  border-radius: 0.28rem;
-  background-color: rgb(233 228 253 / 90%);
-  box-shadow: var(--shadow-sm);
-}
-
-.about__mug::after {
-  content: '';
-  position: absolute;
-  top: 0.4rem;
-  right: -0.42rem;
-  width: 0.5rem;
-  height: 0.7rem;
-  border: 0.16rem solid rgb(22 22 28 / 22%);
-  border-left: 0;
-  border-radius: 0 0.35rem 0.35rem 0;
-}
-
-@media (max-width: 33rem) {
-  .about__note {
-    display: none;
-  }
+/* The quiet grey closing line: one line about the tools behind the scenes,
+   none of the technical detail that belongs in the Skills section. */
+.about__stack-note {
+  max-width: 46ch;
+  margin: var(--space-md) 0 0;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
 }
 
 /* --- Skills & Services --------------------------------------------------- */
@@ -895,28 +782,9 @@
   }
 }
 
-/* Phone variant of the same auto-scroll. The viewport is responsive, so the
-   stop-point uses its own `--phone-h` (set on .mobile-phone__viewport) rather
-   than the desktop card's fixed frame height. */
-@keyframes page-scroll-phone {
-  0% {
-    transform: translateY(0);
-  }
-  58% {
-    transform: translateY(calc(-100% + var(--phone-h)));
-  }
-  74% {
-    transform: translateY(calc(-100% + var(--phone-h)));
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
 /* Refined-motion users freeze on a static frame. */
 @media (prefers-reduced-motion: reduce) {
-  .project-card__browser-scroll img,
-  .mobile-phone__screen img {
+  .project-card__browser-scroll img {
     animation: none;
   }
 }
@@ -1079,9 +947,8 @@
 }
 
 .mobile-phone__viewport {
-  --phone-h: clamp(24rem, 62vh, 32rem);
   position: relative;
-  height: var(--phone-h);
+  height: clamp(24rem, 62vh, 32rem);
   border-radius: 2rem;
   background-color: rgb(255 255 255 / 55%);
   overflow: hidden;
@@ -1094,22 +961,16 @@
   will-change: transform;
 }
 
-/* The screenshot keeps its natural full-page size (width 100%, auto height,
-   no object-fit), so the auto-scroll below reveals the whole page inside the
-   phone. `page-scroll-phone` holds at the footer because it adds the phone
-   viewport's own height to the translateY, matching `--frame-h`. */
+/* Static top-crop of the same full-page screenshot (v11): the phone shows the
+   hero/visible-area strip only; motion comes from the page flip between
+   projects, not from scrolling within one. object-position: top keeps the
+   crop anchored to the top of the page. */
 .mobile-phone__screen img {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: none;
-  will-change: transform;
-  animation: page-scroll-phone 48s ease-in-out infinite;
-}
-
-/* Pause the phone auto-scroll while the card is off-screen. */
-.mobile-phone__viewport.is-off .mobile-phone__screen img {
-  animation-play-state: paused;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
 }
 
 .mobile-phone__controls {

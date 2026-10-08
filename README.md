@@ -8,7 +8,7 @@ customises WordPress sites.
 Static front end built with React and Vite, structured so a back end can be
 connected later.
 
-The visual direction is defined in `zeedev-portfolio-prompt-v9.md`, which
+The visual direction is defined in `zeedev-portfolio-prompt-v11.md`, which
 supersedes all earlier briefs.
 
 ---
@@ -53,8 +53,8 @@ glass and the colour floating behind it.
 Colour is added in deliberate, contained places, all reused from the same
 palette:
 
-- The hero code preview is syntax-highlighted: keywords and property names in
-  violet, string values in amber/peach, bracket punctuation in teal.
+- The hero and About photographs (professional, client-facing stock photos
+  in frosted glass frames) add natural colour without new hues.
 - Project cards carry a pastel tag chip (MERN, E-commerce …) cycling the four
   pastel pairs.
 - Each active filter pill gets its own pastel pair.
@@ -79,8 +79,9 @@ two adjacent cards in a grid repeat a pair.
 ### Typography
 
 Space Grotesk for headings, Inter for body copy and UI, both loaded from Google
-Fonts in `index.html`. No serif or script face is used. A monospace face is
-used for the decorative code preview in the hero and the About workspace mockup.
+Fonts in `index.html`. No serif or script face is used. No screens of code
+appear anywhere — the hero and About sections use professional photography
+instead (see "Photos" below).
 
 Tokens live in `src/styles/tokens.css`; the rest of the styling is split across
 `base.css`, `layout.css`, `components.css` and `sections.css`.
@@ -129,7 +130,9 @@ frame (`src/components/project/ProjectCard.jsx`):
 - **Mobile** — `ProjectCardMobile`: a single phone-frame mockup that flips
   between the projects with a 3D `rotateY` page-flip (Framer Motion
   `AnimatePresence`), controlled by swipe or prev/next taps with dot
-  indicators. Reduced-motion users get a crossfade instead.
+  indicators. The phone shows a static top-crop of the same screenshot — the
+  motion comes from the flip, not an internal scroll. Reduced-motion users
+  get a crossfade instead.
 
 `src/hooks/useMediaQuery.js` picks the variant (`min-width: 48rem`).
 
@@ -142,13 +145,12 @@ touch a component to change a word.
 
 | File | Holds |
 | --- | --- |
-| `src/data/site.js` | Name, role, tagline, nav items, contact details, social links |
-| `src/data/about.js` | About section copy |
+| `src/data/site.js` | Name, role, tagline, hero pills, nav items, contact details, social links |
+| `src/data/about.js` | About section copy and the four promises |
 | `src/data/skills.js` | The four skill cards |
 | `src/data/projects.js` | Projects, screenshots, tags, tool rows, filter categories |
-| `src/data/process.js` | The four process steps (with 01–04 badges) |
+| `src/data/process.js` | The four process steps |
 | `src/data/contact.js` | Form options and copy |
-| `src/data/codePreview.js` | The decorative hero code preview |
 
 Placeholder content is marked in the data files and rendered visibly where
 relevant. What is still a placeholder:
@@ -159,6 +161,17 @@ relevant. What is still a placeholder:
 
 Verified content that should not need changing: the phone number, email, GitHub
 and LinkedIn URLs, and both live project entries.
+
+### Photos and logo
+
+- The hero and About photographs live in `src/assets/photos/` (`hero-client-meeting.jpg`,
+  `about-working-together.jpg`) and are imported in `src/components/sections/Hero.jsx` and
+  `About.jsx`. Drop replacement files with the same names to swap them in, or
+  update the imports. The brief forbids code-on-screen imagery, so keep any
+  screen in a photo showing a finished website interface.
+- The logo artwork is `src/image/logo.png` (also the favicon, wired in
+  `index.html`). Replace the file to rebrand; the header/footer use
+  `brand.name` (`zeedev`) and `brand.compact` (`ZDEV`) from `src/data/site.js`.
 
 ### Replacing the phone number
 
@@ -173,10 +186,10 @@ Copy an existing entry in `projects` in `src/data/projects.js` and fill in
 
 - Drop a **full-page** screenshot of the live site (whole page, top to footer)
   into `src/assets/projects/` as `name.png` and import it at the top of
-  `src/data/projects.js`, then point `screenshot` at that import. Both the
-  desktop browser frame and the mobile phone frame auto-scroll it from the
-  first screen to the footer. The files must exist — a reference to a URL or a
-  missing file renders a blank card.
+  `src/data/projects.js`, then point `screenshot` at that import. The desktop
+  browser frame auto-scrolls it from the first screen to the footer; the mobile
+  phone frame shows a static top-crop of it. The files must exist — a reference
+  to a URL or a missing file renders a blank card.
 - `domain` is shown in the desktop browser-chrome URL bar.
 - `toolkit` lists ids that map to brand-coloured icons in
   `src/components/project/ToolIcon.jsx` (add a new id there for a new tool).
@@ -258,5 +271,5 @@ and `framer-motion` for the mobile page-flip transition. No CSS framework.
 
 ## Notes
 
-`zeedev-portfolio-prompt-v9.md` in the project root is the source brief for
+`zeedev-portfolio-prompt-v11.md` in the project root is the source brief for
 the design. Where anything else disagrees with it, the brief wins.

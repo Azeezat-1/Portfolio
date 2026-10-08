@@ -15,8 +15,9 @@ import ToolRow from './ToolIcon.jsx'
  *    the card leaves the viewport and freezing entirely under reduced motion.
  *  - <ProjectCardMobile> — a single phone-frame preview that flips between the
  *    projects with a 3D page-flip (Framer Motion AnimatePresence), driven by
- *    swipe or prev/next tap controls with dot indicators. The screenshot
- *    auto-scrolls inside the phone frame exactly like the desktop card.
+ *    swipe or prev/next tap controls with dot indicators. The phone shows a
+ *    static top-crop of the same screenshot; motion comes from the flip, not
+ *    from an internal scroll (v11).
  */
 
 /** Which pastel chip pair a card/tag sits in, cycling across the four pairs. */
@@ -76,7 +77,7 @@ export function ProjectCardDesktop({ project, index }) {
             alt={`The ${name} homepage, full page from top to footer`}
             loading="eager"
             decoding="sync"
-            fetchpriority="high"
+            fetchPriority="high"
           />
         </span>
 
@@ -120,7 +121,6 @@ function flipAnims(reduced) {
 export function ProjectCardMobile({ projects }) {
   const reduced = useReducedMotion()
   const [index, setIndex] = useState(0)
-  const scrollRef = useScrollPause()
   const count = projects.length
   const project = projects[index % count]
   const single = count <= 1
@@ -133,7 +133,6 @@ export function ProjectCardMobile({ projects }) {
         <div className="mobile-phone__bezel">
           <span className="mobile-phone__island" aria-hidden="true" />
           <div
-            ref={scrollRef}
             className="mobile-phone__viewport"
             style={{ perspective: 1100 }}
           >
@@ -160,7 +159,7 @@ export function ProjectCardMobile({ projects }) {
                   alt={`The ${project.name} homepage, previewed in a phone frame`}
                   loading="eager"
                   decoding="sync"
-                  fetchpriority="high"
+                  fetchPriority="high"
                 />
               </motion.div>
             </AnimatePresence>

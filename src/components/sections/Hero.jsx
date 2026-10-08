@@ -2,19 +2,20 @@ import { ArrowUpRight } from 'lucide-react'
 
 import Button from '../ui/Button.jsx'
 import Reveal from '../ui/Reveal.jsx'
-import CodePreview from './CodePreview.jsx'
-import { brand, heroEyebrow } from '../../data/site.js'
+import { brand, heroEyebrow, heroPills } from '../../data/site.js'
+import heroPhoto from '../../assets/photos/hero-client-meeting.jpg'
 
 /**
- * Opening section. Two columns: who she is and how to start on the left, an
- * abstract interface preview on the right.
+ * Opening section. Two columns: who she can help and how to start on the
+ * left, a client-facing photograph on the right.
  *
- * The right column is a structured code preview inside a large rounded glass
- * frame rather than a photo of a person, per the brief.
+ * Copy is written for clients (benefits first, plain language, no framework
+ * names) per the v11 brief. The right column is a professional stock photo of
+ * a client consultation in a frosted glass frame — no code, no editors, no
+ * screens full of code anywhere on the page.
  *
- * No floating number badges anywhere on this page: the brief rules out counters
- * and "X+" stats entirely. The single floating element is a short text label,
- * which the brief explicitly allows as the alternative.
+ * No floating number badges anywhere: the floating element over the frame is
+ * a short text label, which the brief explicitly allows.
  */
 export default function Hero() {
   return (
@@ -34,14 +35,21 @@ export default function Hero() {
             <p className="hero__text">{brand.shortDescription}</p>
           </Reveal>
 
-          <Reveal delay={190}>
+          <Reveal delay={180}>
+            <ul className="hero__pills" aria-label="What she builds">
+              {heroPills.map((pill) => (
+                <li className="hero__pill" key={pill}>
+                  {pill}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal delay={220}>
             <div className="hero__actions">
               <Button href="#projects" size="lg" icon={ArrowUpRight}>
                 View My Work
               </Button>
-              {/* No CV has been supplied yet, so this opens the contact form
-                  instead of linking a file that does not exist. Swap in
-                  `href="/cv.pdf"` once there is one. */}
               <Button href="#contact" variant="secondary" size="lg">
                 Start a Conversation
               </Button>
@@ -50,21 +58,20 @@ export default function Hero() {
         </div>
 
         <Reveal className="hero__aside" delay={120}>
-          <div className="hero__frame">
-            <div className="hero__frame-bar" aria-hidden="true">
-              <span className="hero__frame-dot" />
-              <span className="hero__frame-dot" />
-              <span className="hero__frame-dot" />
-            </div>
-
-            {/* Decorative. The same information is stated in prose below the
-                preview, so hiding it from assistive tech loses nothing. */}
-            <CodePreview />
-          </div>
+          <figure className="hero__frame">
+            <img
+              className="hero__photo"
+              src={heroPhoto}
+              alt="A client meeting in a bright modern office, reviewing a
+                   finished website on a laptop."
+              loading="eager"
+              decoding="async"
+            />
+          </figure>
 
           {/* A short text label overlapping the frame edge. Not a counter. */}
           <div className="hero__badges">
-            <span className="hero__label">HTML · CSS · JavaScript · React</span>
+            <span className="hero__label">Clear, modern business websites</span>
           </div>
         </Reveal>
       </div>

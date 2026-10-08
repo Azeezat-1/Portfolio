@@ -6,12 +6,24 @@ export const brand = {
   /** Full name, used for the document title, hero H1 and legal line. */
   nameDisplay: 'Azeezat Yusuf',
   /** Violet accent subheading under the name in the hero. */
-  role: 'Software Developer',
+  role: 'Websites your customers find easy to use.',
   shortDescription:
-    'I build responsive websites and web applications, front end and back end, using HTML, CSS, JavaScript and React. I work in either the MERN or the LAMP stack depending on the project, build and customise WordPress sites, and can turn a Figma design into a fully built, live website.',
+    "I'm a web developer who builds clear, good-looking websites for businesses, brands and organizations. Tell me what you need, whether that's a new site, a refresh of an old one, or a finished design that needs building, and I'll take care of it, so you end up with a site that looks right, works on every device and is easy for you to update.",
 }
 
 export const heroEyebrow = "Hello, I'm"
+
+/**
+ * The plain-language pill row under the hero copy. No framework names here —
+ * the brief keeps the hero written for clients, with technical detail reserved
+ * for the Skills section.
+ */
+export const heroPills = [
+  'Business websites',
+  'WordPress sites',
+  'Web apps',
+  'Design to website',
+]
 
 /**
  * Nav order per the brief: Home, About, Skills, Projects, Contact.
