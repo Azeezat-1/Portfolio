@@ -3,16 +3,16 @@ import { ArrowUpRight } from 'lucide-react'
 import Button from '../ui/Button.jsx'
 import Reveal from '../ui/Reveal.jsx'
 import { brand, heroEyebrow, heroPills } from '../../data/site.js'
-import heroPhoto from '../../assets/photos/hero-client-meeting.jpg'
+import heroPhoto from '../../assets/photos/hero-portrait.jpg'
 
 /**
  * Opening section. Two columns: who she can help and how to start on the
  * left, a client-facing photograph on the right.
  *
  * Copy is written for clients (benefits first, plain language, no framework
- * names) per the v11 brief. The right column is a professional stock photo of
- * a client consultation in a frosted glass frame — no code, no editors, no
- * screens full of code anywhere on the page.
+ * names) per the v11 brief. The right column is Azeezat's own photo in a
+ * frosted glass frame — no code, no editors, no screens full of code anywhere
+ * on the page.
  *
  * No floating number badges anywhere: the floating element over the frame is
  * a short text label, which the brief explicitly allows.
@@ -62,8 +62,7 @@ export default function Hero() {
             <img
               className="hero__photo"
               src={heroPhoto}
-              alt="A client meeting in a bright modern office, reviewing a
-                   finished website on a laptop."
+              alt="Azeezat Yusuf, the developer behind Zeedev."
               loading="eager"
               decoding="async"
             />

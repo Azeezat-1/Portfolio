@@ -164,8 +164,8 @@ and LinkedIn URLs, and both live project entries.
 
 ### Photos and logo
 
-- The hero and About photographs live in `src/assets/photos/` (`hero-client-meeting.jpg`,
-  `about-working-together.jpg`) and are imported in `src/components/sections/Hero.jsx` and
+- The hero and About photographs live in `src/assets/photos/` (`hero-portrait.jpg`,
+  `about-portrait.jpg`) and are imported in `src/components/sections/Hero.jsx` and
   `About.jsx`. Drop replacement files with the same names to swap them in, or
   update the imports. The brief forbids code-on-screen imagery, so keep any
   screen in a photo showing a finished website interface.

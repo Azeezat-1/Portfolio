@@ -6,7 +6,7 @@ import {
   aboutPromises,
   aboutStackNote,
 } from '../../data/about.js'
-import aboutPhoto from '../../assets/photos/about-working-together.jpg'
+import aboutPhoto from '../../assets/photos/about-portrait.jpg'
 
 /**
  * About: eyebrow plus heading, a short piece of writing, four plain-language
@@ -15,9 +15,9 @@ import aboutPhoto from '../../assets/photos/about-working-together.jpg'
  * Written for a client in a warm, direct first-person voice. Deliberately no
  * stat row or numbers — the four promises are qualities, not counters.
  *
- * The supporting visual is a professional photo of two people working
- * together in a modern office, inside a frosted glass frame with a light cool
- * color grade. No code, no editors, no code-on-screen imagery.
+ * The supporting visual is Azeezat's own photo, inside a frosted glass frame
+ * with a light cool color grade. No code, no editors, no code-on-screen
+ * imagery.
  */
 export default function About() {
   return (
@@ -39,8 +39,7 @@ export default function About() {
               <img
                 className="about__photo"
                 src={aboutPhoto}
-                alt="Two people working together on a website at a laptop in a
-                     bright modern office."
+                alt="Azeezat Yusuf."
                 loading="lazy"
                 decoding="async"
               />
