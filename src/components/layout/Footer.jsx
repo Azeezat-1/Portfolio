@@ -5,11 +5,9 @@ import Icon from '../ui/Icon.jsx'
 import { brand, contactDetails, navItems, socialLinks } from '../../data/site.js'
 
 /**
- * Footer: brand on one side, nav menu, contact details, and a copyright line.
- *
- * The soft violet glow from the Contact section keeps bleeding down behind the
- * footer instead of cutting off, so the bottom of the page keeps its depth.
- * Deliberately nothing beyond that, per the brief.
+ * Footer: continues the midnight band with the logo and one short line, the
+ * nav menu, contact details with the social icons, and a copyright line.
+ * Deliberately nothing beyond that (brief §3.11).
  */
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -17,17 +15,16 @@ export default function Footer() {
 
   return (
     <footer className="footer">
-      <div className="footer__glow" aria-hidden="true">
-        <span className="orb orb--local footer__orb" />
-      </div>
-
       <div className="container">
         <div className="footer__grid">
           <div className="footer__brand">
             <a href="#top" aria-label={`${brand.name}, back to top`}>
-              <Logo showSubmark />
+              <Logo />
             </a>
-            <p className="footer__text">{brand.shortDescription}</p>
+            <p className="footer__text">
+              Clear websites and web apps for your business, built properly and
+              made easy to keep up to date.
+            </p>
           </div>
 
           <nav className="footer__col" aria-label="Footer">
@@ -53,6 +50,11 @@ export default function Footer() {
                   {contactDetails.phoneDisplay}
                 </a>
               </li>
+              <li>
+                <span className="footer__location">
+                  Based in {contactDetails.location}
+                </span>
+              </li>
             </ul>
 
             <ul className="footer__social">
@@ -65,15 +67,13 @@ export default function Footer() {
                     rel="noreferrer noopener"
                   >
                     <Icon name={link.icon} size={18} aria-hidden="true" />
-                    <span className="sr-only">
+                    <span className="u-sr-only">
                       {link.label} (opens in a new tab)
                     </span>
                   </a>
                 </li>
               ))}
             </ul>
-
-            <p className="footer__location">Based in {contactDetails.location}</p>
           </div>
         </div>
 

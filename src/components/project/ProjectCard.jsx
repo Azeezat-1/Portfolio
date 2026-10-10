@@ -1,31 +1,31 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, ArrowUpRight, Lock } from 'lucide-react'
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  Lock,
+} from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 
-import ToolRow from './ToolIcon.jsx'
-
 /**
- * Selected work, rendered as two hard-split variants at the viewport
- * breakpoint:
+ * Selected work (brief §3.7), rendered as two hard-split variants at the
+ * viewport breakpoint:
  *
- *  - <ProjectCardDesktop> — one card per project, each showing a tall
- *    full-page screenshot of the live homepage inside a browser-chrome frame
- *    (traffic-light dots and a URL bar naming the real domain). The page
- *    auto-scrolls top-to-bottom inside the frame on a slow loop, pausing when
- *    the card leaves the viewport and freezing entirely under reduced motion.
- *  - <ProjectCardMobile> — a single phone-frame preview that flips between the
- *    projects with a 3D page-flip (Framer Motion AnimatePresence), driven by
- *    swipe or prev/next tap controls with dot indicators. The phone shows a
- *    static top-crop of the same screenshot; motion comes from the flip, not
- *    from an internal scroll (v11).
+ *  - <ProjectPanel> (desktop): one large alternating panel per project, with a
+ *    layered device composition on a violet/indigo colour block: a browser
+ *    frame whose full-page screenshot auto-scrolls top-to-bottom (pausing
+ *    when the panel leaves the viewport), plus a small phone frame with a
+ *    static top-crop overlapping its lower corner.
+ *  - <ProjectPanelMobile> (mobile): a single phone mockup that flips between
+ *    the projects with a 3D page-flip (Framer Motion AnimatePresence), driven
+ *    by swipe or prev/next taps with dot indicators. The phone shows a static
+ *    top-crop; motion comes from the flip, not an internal scroll.
+ *
+ * Neither variant ever uses an iframe of the live site; the local screenshot
+ * files are used throughout, and the URLs are only for the "Visit Site" links.
  */
 
-/** Which pastel chip pair a card/tag sits in, cycling across the four pairs. */
-export function chipClassFor(index) {
-  return `project-card__tag--n${index % 4}`
-}
-
-/** A whole (potentially tall) browser screenshot that scrolls itself. */
+/** Pauses the browser-frame auto-scroll whenever the panel leaves the viewport. */
 function useScrollPause() {
   const ref = useRef(null)
 
@@ -45,60 +45,84 @@ function useScrollPause() {
   return ref
 }
 
-export function ProjectCardDesktop({ project, index }) {
-  const { name, url, screenshot, domain, tag, oneLiner, toolkit } = project
+/** Pastel pill class for a tag chip. */
+function pillClass(index) {
+  return `pill pill--n${(index + 1) % 4}`
+}
+
+export function ProjectPanel({ project, reverse = false }) {
+  const { name, tags, description, url, domain, screenshot } = project
   const scrollRef = useScrollPause()
 
   return (
-    <li className="project-card project-card--desktop">
-      <a
-        className="project-card__browser"
-        href={url}
-        target="_blank"
-        rel="noreferrer noopener"
-        aria-label={`${name}, view the live site`}
-      >
-        <span className="project-card__browser-chrome" aria-hidden="true">
-          <span className="project-card__browser-dots">
-            <span />
-            <span />
-            <span />
-          </span>
-          <span className="project-card__browser-url">
-            <Lock />
-            {domain}
-          </span>
-          <span className="project-card__browser-dots project-card__browser-dots--none" />
-        </span>
+    <li
+      className={`project-panel ${reverse ? 'project-panel--reverse' : ''}`.trim()}
+    >
+      <div className="project-panel__media">
+        <div className="project-panel__stage">
+          <a
+            className="panel__browser"
+            href={url}
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label={`${name}, view the live site`}
+          >
+            <span className="panel__browser-chrome" aria-hidden="true">
+              <span className="panel__browser-dots">
+                <span />
+                <span />
+                <span />
+              </span>
+              <span className="panel__browser-url">
+                <Lock />
+                {domain}
+              </span>
+            </span>
 
-        <span className="project-card__browser-scroll" ref={scrollRef}>
-          <img
-            src={screenshot}
-            alt={`The ${name} homepage, full page from top to footer`}
-            loading="eager"
-            decoding="sync"
-            fetchPriority="high"
-          />
-        </span>
+            <span className="panel__browser-scroll" ref={scrollRef}>
+              <img
+                src={screenshot}
+                alt={`The ${name} homepage, full page from top to footer`}
+                loading="lazy"
+                decoding="async"
+              />
+            </span>
+          </a>
 
-        {/* Corner affordance; the whole frame is the link. */}
-        <span className="icon-btn project-card__corner" aria-hidden="true">
-          <ArrowUpRight />
-        </span>
-      </a>
+          <div className="panel__phone" aria-hidden="true">
+            <div className="panel__phone-screen">
+              <img src={screenshot} alt="" loading="lazy" decoding="async" />
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <span className="project-card__row">
-        <h3 className="project-card__title">{name}</h3>
-        {tag ? (
-          <span className={`project-card__tag ${chipClassFor(index)}`}>
-            {tag}
-          </span>
+      <div className="project-panel__copy">
+        <h3 className="project-panel__title">{name}</h3>
+
+        {tags.length ? (
+          <div className="project-panel__tags">
+            {tags.map((tag, index) => (
+              <span className={pillClass(index)} key={tag}>
+                {tag}
+              </span>
+            ))}
+          </div>
         ) : null}
-      </span>
 
-      <p className="project-card__kind">{oneLiner}</p>
+        <p className="project-panel__desc">{description}</p>
 
-      <ToolRow ids={toolkit} />
+        <a
+          className="btn btn--primary project-panel__visit"
+          href={url}
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          Visit Site
+          <ArrowUpRight aria-hidden="true" />
+          <span className="u-sr-only">({name} opens in a new tab)</span>
+        </a>
+      </div>
     </li>
   )
 }
@@ -118,7 +142,7 @@ function flipAnims(reduced) {
   }
 }
 
-export function ProjectCardMobile({ projects }) {
+export function ProjectPanelMobile({ projects }) {
   const reduced = useReducedMotion()
   const [index, setIndex] = useState(0)
   const count = projects.length
@@ -128,18 +152,12 @@ export function ProjectCardMobile({ projects }) {
   const go = (nextIndex) => setIndex(((nextIndex % count) + count) % count)
 
   return (
-    <li className="project-card project-card--mobile">
+    <li className="project-panel project-panel--mobile">
       <div className="mobile-phone">
         <div className="mobile-phone__bezel">
           <span className="mobile-phone__island" aria-hidden="true" />
-          <div
-            className="mobile-phone__viewport"
-            style={{ perspective: 1100 }}
-          >
-            <AnimatePresence
-              mode="wait"
-              initial={false}
-            >
+          <div className="mobile-phone__viewport" style={{ perspective: 1100 }}>
+            <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 className="mobile-phone__screen"
                 key={project.id}
@@ -157,9 +175,8 @@ export function ProjectCardMobile({ projects }) {
                 <img
                   src={project.screenshot}
                   alt={`The ${project.name} homepage, previewed in a phone frame`}
-                  loading="eager"
-                  decoding="sync"
-                  fetchPriority="high"
+                  loading="lazy"
+                  decoding="async"
                 />
               </motion.div>
             </AnimatePresence>
@@ -168,7 +185,11 @@ export function ProjectCardMobile({ projects }) {
       </div>
 
       {!single ? (
-        <div className="mobile-phone__controls" role="group" aria-label="Choose a project preview">
+        <div
+          className="mobile-phone__controls"
+          role="group"
+          aria-label="Choose a project preview"
+        >
           <button
             type="button"
             className="icon-btn"
@@ -202,29 +223,29 @@ export function ProjectCardMobile({ projects }) {
         </div>
       ) : null}
 
-      <span className="project-card__row">
-        <h3 className="project-card__title">{project.name}</h3>
-        {project.tag ? (
-          <span className={`project-card__tag ${chipClassFor(index)}`}>
-            {project.tag}
-          </span>
+      <div>
+        <h3 className="project-panel__title">{project.name}</h3>
+        {project.tags && project.tags.length ? (
+          <div className="project-panel__tags">
+            {project.tags.map((tag, i) => (
+              <span className={pillClass(i)} key={tag}>
+                {tag}
+              </span>
+            ))}
+          </div>
         ) : null}
-      </span>
-
-      <p className="project-card__kind">{project.oneLiner}</p>
-
-      <ToolRow ids={project.toolkit} />
-
-      <a
-        className="project-card__visit"
-        href={project.url}
-        target="_blank"
-        rel="noreferrer noopener"
-      >
-        Visit the site
-        <ArrowUpRight aria-hidden="true" />
-        <span className="u-sr-only">(opens in a new tab)</span>
-      </a>
+        <p className="project-panel__desc">{project.description}</p>
+        <a
+          className="btn btn--primary project-panel__visit"
+          href={project.url}
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          Visit Site
+          <ArrowUpRight aria-hidden="true" />
+          <span className="u-sr-only">({project.name} opens in a new tab)</span>
+        </a>
+      </div>
     </li>
   )
 }

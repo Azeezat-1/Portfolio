@@ -1,8 +1,8 @@
 /**
- * Contact form configuration.
+ * Contact form configuration (brief §3.10).
  *
- * The subject line the visitor picks from. Edit freely; each value becomes an
- * option in the form.
+ * The option lists the visitor picks from. Edit freely; each value becomes an
+ * option in the form. `budgetRanges` drives the optional select.
  */
 
 export const projectTypes = [
@@ -15,6 +15,15 @@ export const projectTypes = [
   'API integration or back-end work',
   'Maintenance and performance',
   'Something else',
+]
+
+export const budgetRanges = [
+  'Under $500',
+  '$500 - $1,000',
+  '$1,000 - $2,500',
+  '$2,500 - $5,000',
+  'Over $5,000',
+  'Not sure yet',
 ]
 
 export const formCopy = {

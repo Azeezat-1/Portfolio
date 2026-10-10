@@ -3,6 +3,7 @@ import {
   AlertCircle,
   CheckCircle2,
   ChevronDown,
+  Lock,
   Send,
 } from 'lucide-react'
 
@@ -10,16 +11,13 @@ import Button from '../ui/Button.jsx'
 import Icon from '../ui/Icon.jsx'
 import SectionHeading from '../ui/SectionHeading.jsx'
 import Reveal from '../ui/Reveal.jsx'
-import { formCopy, projectTypes } from '../../data/contact.js'
+import { budgetRanges, formCopy, projectTypes } from '../../data/contact.js'
 import { hasEndpoint, submitContact } from '../../api/contact.js'
 import { contactDetails } from '../../data/site.js'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
-/**
- * Validates one field and returns an error message, or an empty string when it
- * passes. Kept beside the form so the rules are readable in one place.
- */
+/** Validates one field, returning an error message or an empty string. */
 function validate(field, value) {
   const trimmed = value.trim()
 
@@ -47,12 +45,14 @@ function validate(field, value) {
 }
 
 const FIELDS = ['name', 'email', 'projectType', 'message']
+const OPTIONAL_FIELDS = ['budget']
 
 export default function Contact() {
   const [values, setValues] = useState({
     name: '',
     email: '',
     projectType: '',
+    budget: '',
     message: '',
   })
   const [errors, setErrors] = useState({})
@@ -62,8 +62,6 @@ export default function Contact() {
   const formRef = useRef(null)
   const uid = useId()
 
-  // Focus lands after React has committed the aria-invalid attributes, not
-  // during the submit handler, so keyboard users reach the first bad field.
   useEffect(() => {
     if (!focusField) return
     const control = formRef.current?.querySelector(`[name="${focusField}"]`)
@@ -75,13 +73,11 @@ export default function Contact() {
   const describedBy = (name) => {
     const parts = []
     if (submitted && errors[name]) parts.push(id(`${name}-error`))
-    if (name === 'message' && !errors.message) parts.push(id('message-hint'))
     return parts.length ? parts.join(' ') : undefined
   }
 
   const setValue = (name, value) => {
     setValues((previous) => ({ ...previous, [name]: value }))
-    // Once a field has failed, clear the error as soon as it is corrected.
     if (errors[name]) {
       setErrors((previous) => ({
         ...previous,
@@ -113,7 +109,6 @@ export default function Contact() {
     }
 
     setFocusField(null)
-
     setStatus('sending')
 
     try {
@@ -121,10 +116,11 @@ export default function Contact() {
         name: values.name.trim(),
         email: values.email.trim(),
         projectType: values.projectType,
+        budget: values.budget || null,
         message: values.message.trim(),
       })
       setStatus('success')
-      setValues({ name: '', email: '', projectType: '', message: '' })
+      setValues({ name: '', email: '', projectType: '', budget: '', message: '' })
       setErrors({})
     } catch {
       setStatus('error')
@@ -133,106 +129,105 @@ export default function Contact() {
 
   const whatsappHref = `https://wa.me/${contactDetails.phone.replace(/\D/g, '')}`
 
+  const contactRows = [
+    {
+      label: 'Email',
+      value: contactDetails.email,
+      icon: 'mail',
+      href: contactDetails.emailHref,
+      external: false,
+    },
+    {
+      label: 'Call',
+      value: contactDetails.phoneDisplay,
+      icon: 'phone',
+      href: `tel:${contactDetails.phone}`,
+      external: false,
+    },
+    {
+      label: 'WhatsApp',
+      value: 'Message me on WhatsApp',
+      icon: 'messageCircle',
+      href: whatsappHref,
+      external: true,
+    },
+    {
+      label: 'Location',
+      value: contactDetails.location,
+      icon: 'mapPin',
+      href: null,
+      external: false,
+    },
+  ]
+
   return (
     <section
-      className="section contact"
+      className="section band band--dark contact"
       id="contact"
       aria-labelledby="contact-title"
     >
-      {/* The soft violet orb the brief asks for behind this section. It sits
-          inside a full-bleed clipping wrapper so it can bleed past the edge
-          without adding horizontal scroll to the page. */}
-      <span className="contact__glow" aria-hidden="true">
-        <span className="orb orb--local contact__orb" />
-      </span>
+      <span className="bp-wire" aria-hidden="true" />
 
-      <div className="container">
-        <SectionHeading
-          id="contact-title"
-          eyebrow="Let's connect"
-          title="Tell me what you are building."
-          split
-        />
+      <div className="container contact__grid">
+        <Reveal className="contact__aside" delay={40}>
+          <SectionHeading
+            id="contact-title"
+            eyebrow="Let's connect"
+            title={
+              <>
+                Tell me what you are <span className="hi">building</span>
+              </>
+            }
+            level={2}
+          />
 
-        <div className="contact__grid">
-          <Reveal className="contact__aside" delay={40}>
-            <div className="contact__card">
-              <h3 className="contact__card-title">Reach me directly</h3>
-              <p className="contact__card-text">
-                Faster than the form if the project is still an idea, or if you
-                would rather talk it through first.
-              </p>
+          <p className="contact__intro">
+            Faster to start with the form if the project is still an idea, or
+            message me directly if you would rather talk it through first.
+          </p>
 
-              <ul className="contact__links">
-                <li>
-                  <a className="contact__link" href={contactDetails.emailHref}>
-                    <span className="contact__link-icon" aria-hidden="true">
-                      <Icon name="mail" size={18} />
-                    </span>
-                    <span>
-                      <span className="contact__link-label">Email</span>
-                      <span className="contact__link-value">
-                        {contactDetails.email}
-                      </span>
-                    </span>
-                  </a>
-                </li>
+          <ul className="contact__links">
+            {contactRows.map((row) => {
+              const content = (
+                <>
+                  <span className="contact__link-icon" aria-hidden="true">
+                    <Icon name={row.icon} size={18} />
+                  </span>
+                  <span>
+                    <span className="contact__link-label">{row.label}</span>
+                    <span className="contact__link-value">{row.value}</span>
+                    {row.external ? (
+                      <span className="u-sr-only"> (opens in a new tab)</span>
+                    ) : null}
+                  </span>
+                </>
+              )
 
-                <li>
+              return row.href ? (
+                <li key={row.label}>
                   <a
                     className="contact__link"
-                    href={`tel:${contactDetails.phone}`}
+                    href={row.href}
+                    {...(row.external
+                      ? { target: '_blank', rel: 'noreferrer noopener' }
+                      : {})}
                   >
-                    <span className="contact__link-icon" aria-hidden="true">
-                      <Icon name="phone" size={18} />
-                    </span>
-                    <span>
-                      <span className="contact__link-label">Call</span>
-                      <span className="contact__link-value">
-                        {contactDetails.phoneDisplay}
-                      </span>
-                    </span>
+                    {content}
                   </a>
                 </li>
-
-                <li>
-                  <a
-                    className="contact__link"
-                    href={whatsappHref}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    <span className="contact__link-icon" aria-hidden="true">
-                      <Icon name="arrowUpRight" size={18} />
-                    </span>
-                    <span>
-                      <span className="contact__link-label">WhatsApp</span>
-                      <span className="contact__link-value">
-                        Message me on WhatsApp
-                      </span>
-                      <span className="sr-only"> (opens in a new tab)</span>
-                    </span>
-                  </a>
-                </li>
-
-                <li>
+              ) : (
+                <li key={row.label}>
                   <div className="contact__link contact__link--static">
-                    <span className="contact__link-icon" aria-hidden="true">
-                      <Icon name="mapPin" size={18} />
-                    </span>
-                    <span>
-                      <span className="contact__link-label">Location</span>
-                      <span className="contact__link-value">
-                        {contactDetails.location}
-                      </span>
-                    </span>
+                    {content}
                   </div>
                 </li>
-              </ul>
-            </div>
-          </Reveal>
+              )
+            })}
+          </ul>
+        </Reveal>
 
-          <Reveal className="contact__form-wrap">
+        <Reveal className="contact__form-wrap" delay={80}>
+          <div className="contact__card">
             <form
               ref={formRef}
               className="contact__form"
@@ -293,13 +288,37 @@ export default function Contact() {
                       </option>
                     ))}
                   </select>
-                  <ChevronDown aria-hidden="true" />
+                  <ChevronDown className="field__chevron" aria-hidden="true" />
                 </div>
                 {submitted && errors.projectType ? (
                   <p className="field__error" id={id('projectType-error')}>
                     {errors.projectType}
                   </p>
                 ) : null}
+              </div>
+
+              <div className="field field--full">
+                <label className="field__label" htmlFor={id('budget')}>
+                  Budget range <span className="field__optional">(optional)</span>
+                </label>
+                <div className="field__select">
+                  <select
+                    className="field__control"
+                    id={id('budget')}
+                    name="budget"
+                    value={values.budget}
+                    onChange={(event) => setValue('budget', event.target.value)}
+                    onBlur={handleBlur}
+                  >
+                    <option value="">Prefer not to say</option>
+                    {budgetRanges.map((range) => (
+                      <option key={range} value={range}>
+                        {range}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="field__chevron" aria-hidden="true" />
+                </div>
               </div>
 
               <div
@@ -334,6 +353,7 @@ export default function Contact() {
               <div className="contact__submit">
                 <Button
                   type="submit"
+                  variant="inverse"
                   size="lg"
                   icon={Send}
                   disabled={status === 'sending'}
@@ -341,14 +361,17 @@ export default function Contact() {
                   {status === 'sending' ? formCopy.submitting : formCopy.submit}
                 </Button>
 
-                {hasEndpoint ? (
+                {!hasEndpoint ? (
                   <p className="form-note">
-                    Your details are used only to reply to this enquiry.
+                    <Lock aria-hidden="true" />
+                    <span>
+                      The form is a demo: nothing leaves your device yet. A real
+                      handler will only use your details to reply.
+                    </span>
                   </p>
                 ) : null}
               </div>
 
-              {/* Polite, so it is announced without interrupting typing. */}
               <p className="u-sr-only" role="status">
                 {status === 'sending'
                   ? 'Sending your message.'
@@ -373,15 +396,14 @@ export default function Contact() {
                 </p>
               ) : null}
             </form>
-          </Reveal>
-
-        </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   )
 }
 
-/** One labelled text input with its error and hint wiring. */
+/** One labelled text input with its error wiring. */
 function Field({
   label,
   name,

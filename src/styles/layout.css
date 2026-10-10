@@ -1,9 +1,9 @@
 /*
- * Containers, sections, section headings, blurred orbs and the reveal
- * animation.
+ * Containers, bands, section headings, grids, blueprint texture, blurred
+ * orbs and the reveal animation.
  *
- * Every section shares the same pale ground, so the page reads as one airy
- * surface with soft colour floating behind it rather than as stacked bands.
+ * The page alternates dark midnight-indigo bands with light frosted-glass
+ * sections. Each band carries the right colour overrides through `--band`.
  */
 
 .container {
@@ -15,25 +15,104 @@
 
 .section {
   position: relative;
-  /* Sections are transparent so the fixed orbs on <body> show through. */
-  padding-block: clamp(3.5rem, 2.5rem + 4vw, 5rem); /* 64-80px rhythm */
-  color: var(--text-body);
+  padding-block: var(--section-y);
 }
 
-/* Section content sits above the decorative orbs. */
 .section > .container {
   position: relative;
   z-index: 1;
 }
 
+/* --- Light band (default): lavender ground with glass surfaces ------------ */
+.band {
+  --glass-card: var(--surface);
+  --glass-card-solid: var(--surface-solid);
+  --card-line: var(--hairline);
+  --accent-soft-bg: rgb(124 92 252 / 10%);
+  color: var(--text-body);
+}
+
+/* --- Dark band: midnight to indigo gradient, blueprint texture ------------ */
+.band--dark {
+  --text-strong: #fff;
+  --text-body: var(--on-dark);
+  --text-muted: rgb(255 255 255 / 60%);
+  --text-accent: var(--violet-soft);
+  --glass-card: var(--glass-dark);
+  --glass-card-solid: #15163a;
+  --card-line: var(--glass-dark-line);
+  --accent-soft-bg: rgb(124 92 252 / 22%);
+  color: var(--on-dark);
+  background-image: linear-gradient(135deg, var(--midnight), var(--indigo));
+  background-color: var(--midnight);
+}
+
+/* Faint blueprint grid over dark bands. Static, subtle (brief §1.2). */
+.band--dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--bp-grid);
+  pointer-events: none;
+}
+
+.band--dark .eyebrow {
+  color: var(--violet-soft);
+}
+
+/* A faint wireframe browser outline in one corner of the dark bands. */
+.band--dark .bp-wire {
+  position: absolute;
+  right: -3rem;
+  bottom: 4rem;
+  width: 15rem;
+  height: 10.5rem;
+  border: 1px solid var(--bp-line);
+  border-radius: var(--radius-md);
+  pointer-events: none;
+}
+
+.band--dark .bp-wire::before,
+.band--dark .bp-wire::after {
+  content: '';
+  position: absolute;
+  border: 1px solid var(--bp-line);
+  border-radius: var(--radius-pill);
+}
+
+.band--dark .bp-wire::before {
+  top: 0.6rem;
+  left: 0.6rem;
+  width: 0.65rem;
+  height: 0.65rem;
+  box-shadow: 1rem 0 0 -0.12rem transparent, 0 0 0 0 transparent;
+}
+
+.band--dark .bp-wire::after {
+  top: 1.4rem;
+  left: 0.6rem;
+  right: 0.6rem;
+  height: 1px;
+  border: 0;
+  background: var(--bp-line);
+}
+
+/* --- Section headings ------------------------------------------------------ */
+
 .section__head {
-  max-width: var(--container-narrow);
-  margin-bottom: clamp(2rem, 1.5rem + 2vw, 3rem);
+  max-width: var(--container-narrow, 44rem);
+  margin-bottom: clamp(2.25rem, 1.5rem + 2.5vw, 3.5rem);
 }
 
 .section__title {
   margin-bottom: var(--space-sm);
   color: var(--text-strong);
+}
+
+.section__lede,
+.section__head .lead {
+  max-width: 46ch;
 }
 
 /* A split heading puts supporting text beside the title instead of under it. */
@@ -45,21 +124,16 @@
 
 @media (min-width: 60rem) {
   .section__head--split {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
     gap: var(--space-xl);
     align-items: end;
   }
-
-  .section__head--split .section__lede {
-    padding-bottom: 0.35rem;
-  }
 }
 
-/* --- Blurred orbs --------------------------------------------------------
-   Large, soft, barely-visible colour blobs. Fixed to the viewport and marked
-   decorative so they scroll slowly behind the content instead of moving with
-   it, which gives depth without any layout cost.
-   --------------------------------------------------------------------- */
+/* --- Blurred orbs ----------------------------------------------------------
+   At most two soft static violet orbs on the whole page, 15-25% opacity
+   (brief §1.2). Static: no animation, no hue shifting.
+   ------------------------------------------------------------------------ */
 
 .orbs {
   position: fixed;
@@ -75,35 +149,20 @@
   filter: blur(90px);
 }
 
-/* Cool white/silver glow near the top of the page. */
-.orb--silver {
-  top: -18rem;
-  left: -10rem;
-  width: 46rem;
-  height: 46rem;
-  background-color: var(--orb-silver);
-  opacity: 0.5;
-}
-
-/* A second silver bloom on the opposite side, so the top of the page has light
-   coming from both corners. */
-.orb--silver-alt {
-  top: 8rem;
-  right: -14rem;
-  width: 34rem;
-  height: 34rem;
-  background-color: rgb(255 255 255 / 70%);
-  opacity: 0.45;
-}
-
-/* The violet glow behind the lower half of the page. The contact section also
-   declares its own local orb so the glow lands where the brief asks for it. */
 .orb--violet {
-  bottom: -20rem;
-  left: 20%;
-  width: 44rem;
-  height: 44rem;
-  background-color: var(--orb-violet);
+  top: -16rem;
+  left: -12rem;
+  width: 40rem;
+  height: 40rem;
+  background-color: rgb(124 92 252 / 16%);
+}
+
+.orb--violet-alt {
+  right: -16rem;
+  top: 46rem;
+  width: 36rem;
+  height: 36rem;
+  background-color: rgb(91 108 232 / 12%);
 }
 
 @media (max-width: 47.99rem) {
@@ -111,24 +170,18 @@
     filter: blur(60px);
   }
 
-  .orb--silver {
-    width: 28rem;
-    height: 28rem;
-  }
-
-  .orb--silver-alt {
-    width: 22rem;
-    height: 22rem;
-  }
-
   .orb--violet {
-    width: 26rem;
-    height: 26rem;
+    width: 24rem;
+    height: 24rem;
+  }
+
+  .orb--violet-alt {
+    width: 20rem;
+    height: 20rem;
   }
 }
 
-/* A locally positioned orb for a single section, e.g. the violet glow behind
-   the contact form. Sits inside the section, so it scrolls with it. */
+/* A locally positioned orb for a single section, so it scrolls with it. */
 .orb--local {
   position: absolute;
   z-index: 0;
@@ -136,16 +189,18 @@
 }
 
 /* --- Reveal -------------------------------------------------------------
-   A short fade and rise, kept minimal per the brief.
-   --------------------------------------------------------------------- */
+   A short fade and rise (section reveal, brief §5). The observer removes the
+   transform permanently after the reveal, so later scrolls cost nothing.
+   ------------------------------------------------------------------------ */
 
 [data-reveal] {
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(12px);
   transition:
-    opacity var(--dur-base) var(--ease-out),
-    transform var(--dur-base) var(--ease-out);
+    opacity 0.5s var(--ease-out),
+    transform 0.5s var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
 }
 
 [data-reveal='in'] {
@@ -157,35 +212,28 @@
 
 .grid {
   display: grid;
-  gap: var(--space-md); /* 16-20px between cards */
+  gap: var(--space-md);
 }
 
-@media (min-width: 46rem) {
-  .grid--2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* Three and four column grids step through two columns first, so cards keep a
-   readable measure on a tablet instead of staying full-bleed until desktop. */
 @media (min-width: 34rem) {
-  .grid--3,
-  .grid--4 {
+  .grid--2,
+  .grid--3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 60rem) {
+  .grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .grid--3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-/* Four columns need the widest breakpoint: at 64rem each card is still about
-   240px wide, which fits a 32px padded card with a 40px chip. */
 @media (min-width: 64rem) {
   .grid--4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--space-sm);
   }
 }

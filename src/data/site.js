@@ -5,7 +5,7 @@ export const brand = {
   compact: 'ZDEV',
   /** Full name, used for the document title, hero H1 and legal line. */
   nameDisplay: 'Azeezat Yusuf',
-  /** Violet accent subheading under the name in the hero. */
+  /** Violet accent line under the name in the hero. */
   role: 'Websites your customers find easy to use.',
   shortDescription:
     "I'm a web developer who builds clear, good-looking websites for businesses, brands and organizations. Tell me what you need, whether that's a new site, a refresh of an old one, or a finished design that needs building, and I'll take care of it, so you end up with a site that looks right, works on every device and is easy for you to update.",
@@ -14,9 +14,9 @@ export const brand = {
 export const heroEyebrow = "Hello, I'm"
 
 /**
- * The plain-language pill row under the hero copy. No framework names here —
- * the brief keeps the hero written for clients, with technical detail reserved
- * for the Skills section.
+ * The plain-language pill row under the hero copy. No framework names here:
+ * the hero is written for clients, with technical detail reserved for the
+ * Technologies strip.
  */
 export const heroPills = [
   'Business websites',
@@ -25,8 +25,28 @@ export const heroPills = [
   'Design to website',
 ]
 
+/** Label on the small floating glass badge over the hero portrait. */
+export const heroBadge = 'Open to new projects'
+
 /**
- * Nav order per the brief: Home, About, Skills, Projects, Contact.
+ * The two glass feature cards straddling the hero's bottom edge. Each is a
+ * pastel icon chip, a title and one line (brief §3.3).
+ */
+export const heroFeatureCards = [
+  {
+    icon: 'component',
+    title: 'Built from your design',
+    text: 'Send me a Figma design and I will turn it into a fully working website.',
+  },
+  {
+    icon: 'layers',
+    title: 'WordPress or custom code',
+    text: 'I choose the right tools for your project and your budget.',
+  },
+]
+
+/**
+ * Nav order per the brief: Home, About, Services, Projects, Reviews, Contact.
  *
  * Process is a section on the page but deliberately not a nav item. Each `id`
  * must match a section's DOM id in App.jsx.
@@ -34,12 +54,13 @@ export const heroPills = [
 export const navItems = [
   { id: 'top', label: 'Home' },
   { id: 'about', label: 'About' },
-  { id: 'skills', label: 'Skills' },
+  { id: 'services', label: 'Services' },
   { id: 'projects', label: 'Projects' },
+  { id: 'reviews', label: 'Reviews' },
   { id: 'contact', label: 'Contact' },
 ]
 
-/** Label for the dark pill button in the nav. */
+/** Label for the pill button in the nav. */
 export const ctaNavLabel = 'Start a Conversation'
 
 /**

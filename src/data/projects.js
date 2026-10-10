@@ -1,66 +1,48 @@
-import arriyaadhShot from '../assets/projects/arriyaadh.png'
-import grandeurShot from '../assets/projects/grandeur.png'
+import arriyaadhShot from '../assets/projects/arriyaadh.jpg'
+import grandeurShot from '../assets/projects/grandeur.jpg'
 
 /**
- * Selected work.
+ * Selected work (brief §3.7). Two real, shipped projects with live URLs.
  *
- * Two real, shipped projects with live URLs. The brief supplies both
- * descriptions directly and says to use them as actual data, not placeholders.
- * Full-page screenshots are captured from the home page of each live site and
- * live in `src/assets/projects/` (imported above so Vite bundles them);
- * `domain` is shown in the browser-chrome URL bar on the desktop card, and
- * `toolkit` drives the brand-coloured icon row.
+ * Optimised full-page screenshots (about 1280px wide) are captured from the
+ * home page of each live site and imported above so Vite bundles them. They
+ * are shown inside browser and phone device frames, never in an iframe.
  *
- * Do not invent project names, descriptions, clients or results. Copy an
- * existing entry to add real work.
- *
- * `categories` drives the filter bar. Every category must match an existing
- * filter, or the project will only appear under All.
- *
- * Front-end stack entries were verified against each live JavaScript bundle
- * (React, React Router, Axios on a "/api" base). Node, Express and MongoDB are
- * part of the build but cannot be confirmed from a front-end bundle alone.
+ * For Ar-Riyaadh the brief states the stack and what was built. For Grandeur
+ * it explicitly says NOT to state which stack or exactly what was built, so
+ * `role` and `stack` are left as clearly marked TODO fields below.
  */
 
 export const projects = [
   {
     id: 'ar-riyaadh-academy',
     name: 'Ar-Riyaadh Academy',
-    /** Short pastel chip under the title (§1.2a). */
-    tag: 'MERN',
-    oneLiner:
-      'Islamic & Arabic learning platform for women and girls — full build, front end and back end.',
-    categories: ['Full-stack', 'React', 'MERN'],
-    live: true,
-    /** Full-page capture of the live homepage, from top to footer. */
-    screenshot: arriyaadhShot,
-    /** Shown in the browser-chrome URL bar on the desktop card. */
-    domain: 'arriyaadh.com',
-    /** IDs into the brand-coloured tool icons (see ToolIcon.jsx). */
-    toolkit: ['react', 'node', 'express', 'mongodb'],
+    /** Pastel tag chips shown with the project name. */
+    tags: ['MERN', 'Islamic & Arabic learning'],
+    description:
+      'An Islamic and Arabic learning website for women and girls (Umm Abdillah Ar-Riyaadh Academy): classes, lectures, Hijaamah instruction and student reviews, with a Telegram-based class access flow.',
+    role: 'Full build, front end and back end. Built on the MERN stack.',
+    stack: ['React', 'Node.js', 'Express', 'MongoDB'],
     url: 'https://arriyaadh.com/',
+    domain: 'arriyaadh.com',
+    screenshot: arriyaadhShot,
+    toolkit: ['react', 'node', 'express', 'mongodb'],
     repo: null,
   },
   {
     id: 'grandeur',
     name: 'Grandeur',
-    tag: 'E-commerce',
-    oneLiner:
-      'Bespoke men\'s fashion and tailoring site — Nigerian native wear, kaftans, agbada and suits.',
-    categories: ['Full-stack', 'React', 'E-commerce'],
-    live: true,
-    screenshot: grandeurShot,
-    domain: 'grandeur-fd77.vercel.app',
-    toolkit: ['react', 'react-router', 'node', 'mongodb'],
+    /** Pastel tag chips shown with the project name. */
+    tags: ['Fashion & tailoring'],
+    description:
+      "A bespoke men's fashion and tailoring site: Nigerian native wear, kaftans, agbada, suits and fashion design training.",
+    /** TODO: supply what she built and on which stack. */
+    role: '',
+    stack: [],
     url: 'https://grandeur-fd77.vercel.app/',
+    domain: 'grandeur-fd77.vercel.app',
+    screenshot: grandeurShot,
+    toolkit: ['react', 'node', 'mongodb'],
     repo: null,
   },
-]
-
-/** Filter categories, ordered. Derived so a new project's tags appear here. */
-export const projectCategories = [
-  'All',
-  ...Array.from(
-    new Set(projects.flatMap((p) => p.categories)),
-  ).filter((c) => c !== 'All'),
 ]

@@ -1,44 +1,128 @@
-/* Section-specific styles, in page order: nav, hero, about, services, tools,
-   projects, process, testimonials, contact and footer.
+/* Section-specific styles, in page order: utility bar, nav, hero, marquee,
+   about, services, projects, process, testimonials, contact, footer. */
 
-   Everything here sits on the same pale ground. Depth comes from the frosted
-   card treatment and the blurred orbs behind, not from alternating bands. */
+/* --- Utility bar -----------------------------------------------------------
+   A thin midnight bar above the nav: phone, email, small social icons.
+   Hidden on mobile (brief §3.1).
+   ------------------------------------------------------------------------ */
 
-/* --- Navigation --------------------------------------------------------- */
+.util {
+  position: relative;
+  z-index: 61;
+  background-color: var(--midnight);
+  color: rgb(255 255 255 / 70%);
+}
+
+.util__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  min-height: 2.5rem;
+  font-size: var(--fs-sm);
+}
+
+.util__group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+.util__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 40px;
+  color: rgb(255 255 255 / 70%);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--dur-base) var(--ease);
+}
+
+.util__link:hover {
+  color: #fff;
+}
+
+.util__link svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  color: var(--violet-soft);
+}
+
+.util__socials {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.util__socials .util__link {
+  min-width: 40px;
+  justify-content: center;
+}
+
+@media (max-width: 47.999rem) {
+  .util {
+    display: none;
+  }
+}
+
+/* --- Navigation ------------------------------------------------------------
+   A floating frosted pill. Over the dark hero it uses dark glass; once the
+   hero has scrolled out it switches to light glass (done in Navbar.jsx with
+   `nav--light`). On mobile: a clean menu button with a smooth drawer.
+   ------------------------------------------------------------------------ */
 
 .nav {
+  --text-strong: #fff;
+  --text-muted: rgb(255 255 255 / 60%);
   position: sticky;
-  top: 0;
-  z-index: 50;
-  /* A frosted glass bar per the brief. Solid before scroll so the page content
-     is never visible through it, then translucent and blurred once moved. */
-  background-color: rgb(244 243 248 / 88%);
-  border-bottom: 1px solid transparent;
+  top: var(--space-xs);
+  z-index: 60;
+  padding-top: 0;
+}
+
+.nav__pill {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-height: calc(var(--nav-height) - var(--space-xs));
+  padding: 0.4rem 0.65rem 0.4rem var(--space-md);
+  border: 1px solid var(--dark-hairline);
+  border-radius: var(--radius-pill);
+  background-color: rgb(11 12 42 / 55%);
+  box-shadow: var(--shadow-lg);
+  color: var(--text-strong);
   transition:
+    background-color var(--dur-base) var(--ease),
     border-color var(--dur-base) var(--ease),
     box-shadow var(--dur-base) var(--ease);
 }
 
-.nav--scrolled {
-  border-bottom-color: var(--border);
-  box-shadow: var(--shadow-sm);
-}
-
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  .nav {
-    background-color: rgb(244 243 248 / 70%);
-    -webkit-backdrop-filter: blur(14px) saturate(150%);
-    backdrop-filter: blur(14px) saturate(150%);
+  .nav__pill {
+    background-color: rgb(11 12 42 / 60%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
   }
 }
 
-.nav__inner {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-  min-height: var(--nav-height);
-  /* Centres the link pill between the wordmark and the CTA on wide screens. */
-  position: relative;
+/* Once scrolled past the hero, the pill sits over the light sections and
+   switches to light glass. */
+.nav--light .nav__pill {
+  --text-strong: var(--ink);
+  background-color: rgb(255 255 255 / 62%);
+  border-color: var(--hairline);
+  box-shadow: var(--shadow-md);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .nav--light .nav__pill {
+    background-color: rgb(255 255 255 / 55%);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+    backdrop-filter: blur(18px) saturate(150%);
+  }
 }
 
 .nav__brand {
@@ -49,24 +133,17 @@
   text-decoration: none;
 }
 
-/* The centred pill nav group. Each link is a soft chip; the active one turns
-   violet so the current section is obvious without a separate indicator. */
 .nav__links {
   display: none;
   align-items: center;
-  gap: 0.15rem;
-  padding: 0.3rem;
-  border: 1px solid var(--border);
+  gap: 0.1rem;
+  padding: 0.2rem;
   border-radius: var(--radius-pill);
-  background-color: rgb(255 255 255 / 55%);
 }
 
 @media (min-width: 68rem) {
   .nav__links {
     display: flex;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
   }
 }
 
@@ -74,29 +151,41 @@
   display: inline-flex;
   align-items: center;
   min-height: 40px;
-  padding-inline: 0.9rem;
+  padding-inline: 0.85rem;
   border-radius: var(--radius-pill);
   font-family: var(--font-display);
   font-size: var(--fs-sm);
   font-weight: var(--fw-medium);
   letter-spacing: 0.005em;
   text-decoration: none;
-  color: var(--text-body);
+  color: rgb(255 255 255 / 70%);
   transition:
     background-color var(--dur-base) var(--ease),
     color var(--dur-base) var(--ease);
 }
 
 .nav__link:hover {
-  background-color: rgb(255 255 255 / 70%);
+  color: #fff;
+}
+
+@media (min-width: 68rem) {
+  .nav__link.is-active {
+    background-color: rgb(255 255 255 / 12%);
+    color: #fff;
+  }
+}
+
+.nav--light .nav__link {
+  color: var(--text-muted);
+}
+
+.nav--light .nav__link:hover {
   color: var(--text-strong);
 }
 
-/* Active state is the violet fill named in the brief, so the pill itself is
-   the indicator. */
-.nav__link.is-active {
-  background-color: var(--accent-fill);
-  color: #fff;
+.nav--light .nav__link.is-active {
+  background-color: rgb(124 92 252 / 12%);
+  color: var(--accent-text);
 }
 
 .nav__actions {
@@ -114,15 +203,20 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--dark-hairline);
   border-radius: var(--radius-pill);
-  background-color: rgb(255 255 255 / 60%);
-  color: var(--text-strong);
+  background-color: rgb(255 255 255 / 6%);
+  color: #fff;
 }
 
 .nav__toggle svg {
   width: 20px;
   height: 20px;
+}
+
+.nav--light .nav__toggle {
+  background-color: rgb(255 255 255 / 60%);
+  color: var(--text-strong);
 }
 
 @media (min-width: 68rem) {
@@ -131,7 +225,7 @@
   }
 }
 
-/* --- Mobile drawer ------------------------------------------------------- */
+/* --- Mobile drawer -------------------------------------------------------- */
 
 .nav-drawer {
   display: none;
@@ -148,8 +242,8 @@
     padding: var(--space-lg) clamp(1.25rem, 5vw, 2.5rem) var(--space-xl);
     overflow-y: auto;
     overscroll-behavior: contain;
-    background-color: var(--c-bg);
-    /* Kept out of the layout and the tab order until it opens. */
+    background-color: var(--midnight);
+    color: var(--on-dark);
     visibility: hidden;
     opacity: 0;
     transform: translateY(-8px);
@@ -179,17 +273,15 @@
 .nav-drawer__link {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-md);
   min-height: 56px;
   padding-block: var(--space-sm);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--glass-dark-line);
   font-family: var(--font-display);
   font-size: 1.375rem;
   font-weight: var(--fw-heading);
   letter-spacing: var(--ls-heading);
   text-decoration: none;
-  color: var(--text-strong);
+  color: #fff;
 }
 
 .nav-drawer__foot {
@@ -202,12 +294,20 @@
   min-height: 48px;
 }
 
-/* --- Hero ---------------------------------------------------------------- */
+/* --- Hero ------------------------------------------------------------------
+   A full-width midnight-to-indigo panel with the blueprint texture and a large
+   curved bottom edge. Two glass feature cards straddle that bottom edge,
+   half over the dark panel and half over the light section below.
+   ------------------------------------------------------------------------ */
 
-/* An explicit minmax(0, 1fr) column, not the implicit auto column. The preview
-   frame contains a <pre> with long lines, and an auto-sized grid track takes its
-   min-content width, which pushed the whole hero wider than a phone screen.
-   minmax(0, 1fr) lets the track shrink below that and the <pre> scrolls. */
+.hero {
+  z-index: 3;
+  padding-top: clamp(2rem, 1rem + 4vw, 3.5rem);
+  overflow: visible;
+  border-radius: 0 0 var(--radius-curve) var(--radius-curve);
+  color: var(--on-dark);
+}
+
 .hero__inner {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -217,53 +317,44 @@
 
 @media (min-width: 64rem) {
   .hero__inner {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
     gap: var(--space-2xl);
   }
 }
 
 .hero__title {
-  font-size: var(--fs-h1);
-  font-weight: var(--fw-extrabold);
-  line-height: var(--lh-tight);
-  letter-spacing: var(--ls-tight);
-  color: var(--text-strong);
+  color: #fff;
 }
 
-/* The violet accent subheading under the name, 28-32px semibold. */
 .hero__role {
   margin-block: var(--space-sm) var(--space-md);
   font-family: var(--font-display);
   font-size: var(--fs-role);
   font-weight: var(--fw-heading);
   letter-spacing: var(--ls-heading);
-  color: var(--accent-ink);
+  color: var(--violet-soft);
 }
 
 .hero__text {
-  max-width: 46ch;
+  max-width: 52ch;
   font-size: var(--fs-lead);
-  line-height: var(--lh-body);
-  color: var(--text-body);
+  color: var(--on-dark);
+}
+
+.hero__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  margin: var(--space-md) 0 0;
+  padding: 0;
+  list-style: none;
 }
 
 .hero__actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
-  margin-top: var(--space-lg);
-}
-
-.hero__actions .btn {
-  min-height: 48px;
-}
-
-/* The hero CTA turns violet on hover, a deliberate accent: white on #6B48EE
-   clears 4.5:1, so text stays legible while the fill changes. */
-.hero__actions .btn--primary:hover {
-  background-color: var(--accent-fill);
-  border-color: var(--accent-fill);
-  box-shadow: 0 14px 30px -12px rgb(124 92 252 / 55%);
+  margin-top: var(--space-2xl);
 }
 
 @media (max-width: 41.999rem) {
@@ -277,131 +368,226 @@
   }
 }
 
-/* The right column: a large rounded glass frame holding the portrait photo,
-   with the short text label overlapping its lower edge. */
-.hero__aside {
+/* --- Hero art: the portrait on a violet block ------------------------------
+   The supplied photo is not a transparent cutout, so it sits on a solid
+   violet block with a thin offset outline (Sagaz layering) rather than a
+   true edge-overlap cutout. A TODO marks where a transparent PNG would go.
+   ------------------------------------------------------------------------ */
+
+.hero__art {
   position: relative;
   min-width: 0;
 }
 
-.hero__frame {
+/* The solid violet block behind the portrait. */
+.hero__block {
   position: relative;
-  min-width: 0;
-  padding: 0;
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-lg); /* big surfaces, 24px */
-  background-color: var(--glass-fallback);
+  border-radius: var(--radius-panel);
+  background-image: linear-gradient(
+    160deg,
+    var(--violet),
+    rgb(93 63 214)
+  );
   box-shadow: var(--shadow-lg);
-  overflow: hidden;
 }
 
-@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  .hero__frame {
-    background-color: var(--glass-bg);
-    -webkit-backdrop-filter: blur(var(--glass-blur))
-      saturate(var(--glass-saturation));
-    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-  }
-}
-
-/* A portrait-oriented photo (4:5) filling the glass frame. */
-.hero__photo {
+.hero__block img {
   display: block;
   width: 100%;
   height: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 0.96;
   object-fit: cover;
+  border-radius: var(--radius-panel);
 }
 
-/* The plain-language pill row under the hero copy (v11). The pills reuse the
-   four pastel chip pairs, so adjacent pills never share a colour. */
-.hero__pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2xs);
-  margin: var(--space-md) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.hero__pill {
-  padding: 0.34rem 0.85rem;
-  border-radius: var(--radius-pill);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-medium);
-  line-height: 1.4;
-}
-.hero__pill:nth-child(4n + 1) {
-  background-color: var(--chip-amber-bg);
-  color: var(--chip-amber-ink);
-}
-.hero__pill:nth-child(4n + 2) {
-  background-color: var(--chip-lav-bg);
-  color: var(--chip-lav-ink);
-}
-.hero__pill:nth-child(4n + 3) {
-  background-color: var(--chip-indigo-bg);
-  color: var(--chip-indigo-ink);
-}
-.hero__pill:nth-child(4n + 4) {
-  background-color: var(--chip-teal-bg);
-  color: var(--chip-teal-ink);
-}
-
-/* The one floating element near the hero visual: a short text label. The brief
-   bans counters and "X+" stats anywhere on the page, and explicitly allows a
-   text label or icon as the alternative. */
-.hero__badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-xs);
-  margin-top: calc(-1 * var(--space-lg));
-  margin-left: var(--space-lg);
-  position: relative;
+/* Thin offset outline, echoing the phosphor edge in the Sagaz reference. */
+.hero__block::after {
+  content: '';
+  position: absolute;
+  inset: 0;
   z-index: 2;
-  min-width: 0;
+  border: 1px solid rgb(255 255 255 / 40%);
+  border-radius: var(--radius-panel);
+  transform: translate(10px, 10px);
+  pointer-events: none;
 }
 
-.hero__label {
+/* One small floating glass badge overlapping the image edge. Text only. */
+.hero__badge {
+  position: absolute;
+  left: -0.75rem;
+  bottom: 2.5rem;
+  z-index: 3;
   display: inline-flex;
   align-items: center;
-  min-height: 40px;
-  padding: var(--space-2xs) var(--space-sm);
-  border: 1px solid var(--border-glass);
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: var(--space-2xs) var(--space-md);
+  border: 1px solid var(--glass-dark-line);
   border-radius: var(--radius-pill);
-  background-color: var(--glass-fallback);
-  box-shadow: var(--shadow-sm);
+  background-color: rgb(22 22 58 / 55%);
+  box-shadow: var(--shadow-md);
+  color: #fff;
   font-family: var(--font-display);
   font-size: var(--fs-sm);
   font-weight: var(--fw-heading);
-  color: var(--text-strong);
+  white-space: nowrap;
+}
+
+.hero__badge::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: none;
+  border-radius: 50%;
+  background-color: #57cb8a;
 }
 
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  .hero__label {
-    background-color: var(--glass-bg);
-    -webkit-backdrop-filter: blur(var(--glass-blur))
-      saturate(var(--glass-saturation));
-    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  .hero__badge {
+    background-color: rgb(22 22 58 / 48%);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
   }
 }
 
-@media (max-width: 41.999rem) {
-  .hero__badges {
-    margin-left: 0;
-    margin-top: var(--space-md);
-  }
+/* --- The two floating feature cards straddling the hero's bottom edge ------ */
 
-  .hero__label {
-    font-size: var(--fs-xs);
+.hero__cards {
+  display: grid;
+  gap: var(--space-sm);
+  margin-top: clamp(2rem, 1rem + 4vw, 4rem);
+  transform: translateY(50%);
+}
+
+@media (min-width: 48rem) {
+  .hero__cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-md);
   }
 }
 
-/* --- About --------------------------------------------------------------- */
+.hero__card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-sm);
+  align-items: start;
+}
 
-/* Writing beside a supporting photo. No stat row or counters: the prose and
-   the promises are the whole story.
-   --------------------------------------------------------------------- */
+.hero__card-copy {
+  display: grid;
+  gap: var(--space-2xs);
+  padding-top: 0.2rem;
+}
+
+.hero__card-title {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: #fff;
+}
+
+.hero__card-text {
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: rgb(255 255 255 / 72%);
+}
+
+/* --- Technologies marquee --------------------------------------------------
+   An infinitely sliding strip of glass tiles, faded at both edges. Pauses on
+   hover and keyboard focus; falls back to a wrapped static grid under reduced
+   motion (brief §3.4).
+   ------------------------------------------------------------------------ */
+
+.marquee {
+  padding-top: calc(var(--section-y) + 4rem);
+}
+
+.marquee__track {
+  position: relative;
+  overflow: hidden;
+  padding-block: var(--space-sm);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+}
+
+.marquee__list {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-md);
+  width: max-content;
+  animation: marquee 50s linear infinite;
+}
+
+.marquee__list:hover,
+.marquee__track:focus-within .marquee__list {
+  animation-play-state: paused;
+}
+
+.marquee__tile {
+  display: grid;
+  place-items: center;
+  gap: 0.5rem;
+  min-width: 7.5rem;
+  padding: var(--space-md);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  background-color: var(--glass-card-solid);
+  box-shadow: var(--shadow-sm);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .marquee__tile {
+    background-color: var(--glass-card);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+  }
+}
+
+.marquee__icon {
+  width: 1.9rem;
+  height: 1.9rem;
+}
+
+.marquee__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--text-strong);
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee__list {
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: none;
+  }
+}
+
+/* --- About -----------------------------------------------------------------
+   Light section. Left: the photo inside a frosted glass frame on a soft
+   violet blob. Right: eyebrow, two-tone H2, intro copy, four promise rows
+   and a quiet grey stack note.
+   ------------------------------------------------------------------------ */
+
 .about__grid {
   display: grid;
   gap: var(--space-xl);
@@ -410,48 +596,49 @@
 
 @media (min-width: 60rem) {
   .about__grid {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
     gap: var(--space-2xl);
   }
 }
 
-.about__prose {
-  display: grid;
-  gap: var(--space-sm);
-}
-
-.about__prose .lead {
-  margin-bottom: 0;
-  color: var(--text-body);
-}
-
-/* The supporting photo, inside a frosted frame with a light cool grade. */
 .about__media {
+  position: relative;
   min-width: 0;
+}
+
+/* The violet organic blob behind the frame. Stays inside the page gutter so
+   it never adds horizontal scroll. */
+.about__blob {
+  position: absolute;
+  inset: -1rem -0.8rem -0.8rem -1.1rem;
+  background-image: linear-gradient(
+    140deg,
+    rgb(124 92 252 / 22%),
+    rgb(79 95 224 / 12%)
+  );
+  border-radius: 58% 42% 46% 54% / 52% 46% 54% 48%;
+  filter: blur(2px);
 }
 
 .about__frame {
   position: relative;
   padding: 0;
-  border: 1px solid var(--border-glass);
+  border: 1px solid var(--hairline);
   border-radius: var(--radius-lg);
-  background-color: var(--glass-fallback);
+  background-color: var(--glass-card-solid);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
-  isolation: isolate;
 }
 
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
   .about__frame {
-    background-color: var(--glass-bg);
-    -webkit-backdrop-filter: blur(var(--glass-blur))
-      saturate(var(--glass-saturation));
-    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    background-color: var(--glass-card);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
   }
 }
 
-/* A faint cool/blue grade over the photo, per the brief's "light, slightly
-   cool color grade", so it sits naturally against the lavender-grey ground. */
+/* One consistent light, slightly cool colour grade over the photo. */
 .about__frame::after {
   content: '';
   position: absolute;
@@ -460,9 +647,9 @@
   pointer-events: none;
   background: linear-gradient(
     135deg,
-    rgb(90 120 255 / 6%),
+    rgb(90 120 255 / 7%),
     transparent 55%,
-    rgb(90 120 255 / 4%)
+    rgb(90 120 255 / 5%)
   );
 }
 
@@ -470,14 +657,17 @@
   display: block;
   width: 100%;
   height: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1;
   object-fit: cover;
 }
 
-/* The four plain-language promises under the copy — each a small outline icon
-   in a pastel chip, a title and one line. Qualities, not statistics. */
+.about__prose {
+  display: grid;
+  gap: var(--space-sm);
+}
+
 .about__promises {
-  margin-top: var(--space-lg);
+  margin-top: var(--space-xl);
 }
 
 .about__promise-list {
@@ -503,7 +693,7 @@
 .about__promise-copy {
   display: grid;
   gap: var(--space-3xs);
-  padding-top: 0.35rem;
+  padding-top: 0.4rem;
 }
 
 .about__promise-title {
@@ -518,191 +708,160 @@
   color: var(--text-body);
 }
 
-/* The quiet grey closing line: one line about the tools behind the scenes,
-   none of the technical detail that belongs in the Skills section. */
+/* The quiet grey closing line about the tools behind the scenes. */
 .about__stack-note {
-  max-width: 46ch;
-  margin: var(--space-md) 0 0;
+  max-width: 52ch;
+  margin-top: var(--space-md);
   font-size: var(--fs-sm);
   color: var(--text-muted);
 }
 
-/* --- Skills & Services --------------------------------------------------- */
+/* --- Services ---------------------------------------------------------------
+   On the shared light frost ground, matching every other section. Four glass
+   cards, each an icon chip, title, two-line description and a "Learn more"
+   arrow to Contact.
+   ------------------------------------------------------------------------ */
 
-/* The only icon grid on the page. The brief rules out a technology logo wall,
-   so each card is icon, title and one line explaining what the work involves. */
-.skills__grid {
-  align-items: stretch;
-}
-
-.skill-card {
+.services__cards {
   display: grid;
-  align-content: start;
-  gap: var(--space-2xs);
-  padding: var(--space-lg);
-  transition:
-    transform var(--dur-base) var(--ease),
-    box-shadow var(--dur-base) var(--ease);
-}
-
-.skill-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-float);
-}
-
-.skill-card__title {
-  margin-bottom: var(--space-3xs);
-  font-size: var(--fs-h4);
-}
-
-.skill-card__text {
-  margin-bottom: 0;
-  color: var(--text-body);
-  font-size: var(--fs-sm);
-}
-
-/* --- Projects ------------------------------------------------------------ */
-
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-sm);
-  padding-bottom: var(--space-lg);
-  margin-bottom: var(--space-lg);
-}
-
-.filters__bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  padding: 0.3rem;
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-pill);
-  background-color: var(--glass-bg);
-}
-
-@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  .filters__bar {
-    -webkit-backdrop-filter: blur(var(--glass-blur))
-      saturate(var(--glass-saturation));
-    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-  }
-}
-
-.filters__button {
-  min-height: 36px;
-  padding-inline: var(--space-sm);
-  border: 0;
-  border-radius: var(--radius-pill);
-  background-color: transparent;
-  font-family: var(--font-display);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-medium);
-  color: var(--text-body);
-  cursor: pointer;
-  transition:
-    background-color var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
-}
-
-.filters__button:hover {
-  color: var(--text-strong);
-}
-
-/* The active pill takes its own pastel pair (set inline per category, §1.2a);
-   the "All" pill falls back to the violet accent fill. */
-.filters__button.is-active {
-  background-color: var(--pill-bg, var(--accent-fill));
-  color: var(--pill-ink, #fff);
-}
-
-.projects__grid {
-  display: grid;
-  gap: var(--space-xl);
+  gap: var(--space-md);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 @media (min-width: 48rem) {
-  .projects__grid {
+  .services__cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-lg);
   }
 }
 
-.project-card {
+@media (min-width: 68rem) {
+  .services__cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.services__card {
   display: grid;
   align-content: start;
-  gap: var(--space-2xs);
+  gap: var(--space-sm);
+  height: 100%;
+}
+
+.services__card-title {
+  font-size: var(--fs-h4);
+  color: var(--text-strong);
+}
+
+.services__card-text {
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--text-body);
+}
+
+.services__card .link-arrow {
+  margin-top: auto;
+  padding-top: var(--space-sm);
+}
+
+/* --- Projects ---------------------------------------------------------------
+   Two featured projects as large panels on the light ground, each with a
+   layered device composition on a violet/indigo colour block.
+   ------------------------------------------------------------------------ */
+
+.project-panels {
+  display: grid;
+  gap: var(--space-3xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-panel {
+  display: grid;
+  gap: var(--space-xl);
+  align-items: center;
+}
+
+/* The panel flips side on every other project. */
+@media (min-width: 60rem) {
+  .project-panel {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: var(--space-2xl);
+  }
+
+  .project-panel--reverse .project-panel__media {
+    order: 2;
+  }
+}
+
+.project-panel__media {
   min-width: 0;
 }
 
-/* --- Desktop card: browser-chrome frame ----------------------------------
-   A rounded top bar with traffic-light dots and a URL bar naming the real
-   domain, over an auto-scrolling full-page capture of the live site.
-   --------------------------------------------------------------------- */
+/* The violet/indigo colour block holding the device composition. */
+.project-panel__stage {
+  position: relative;
+  padding: clamp(2rem, 1.5rem + 3vw, 3.5rem);
+  border-radius: var(--radius-panel);
+  background-image: linear-gradient(
+    150deg,
+    var(--violet),
+    var(--indigo)
+  );
+  box-shadow: var(--shadow-lg);
+}
 
-.project-card__browser {
+/* --- Browser frame ----------------------------------------------------------
+   A chrome frame (dots + URL bar) over an auto-scrolling full-page capture.
+   ------------------------------------------------------------------------ */
+
+.panel__browser {
   position: relative;
   display: block;
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-lg);
-  background-color: var(--card-bg);
-  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-md);
+  background-color: #fff;
+  box-shadow: var(--shadow-float);
   overflow: hidden;
   text-decoration: none;
-  transition:
-    transform var(--dur-base) var(--ease),
-    box-shadow var(--dur-base) var(--ease);
 }
 
-.project-card__browser:hover,
-.project-card__browser:focus-visible {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-float);
-}
-
-.project-card__browser-chrome {
+.panel__browser-chrome {
   display: flex;
   align-items: center;
   gap: var(--space-2xs);
-  padding: 0.55rem 0.75rem;
+  padding: 0.6rem 0.8rem;
   border-bottom: 1px solid var(--border);
-  background-color: rgb(255 255 255 / 60%);
+  background-color: rgb(248 247 250 / 90%);
 }
 
-.project-card__browser-dots {
+.panel__browser-dots {
   display: flex;
   flex: none;
   gap: 0.3rem;
 }
 
-.project-card__browser-dots--none {
-  opacity: 0;
-}
-
-.project-card__browser-dots span {
-  width: 0.5rem;
-  height: 0.5rem;
+.panel__browser-dots span {
+  width: 0.55rem;
+  height: 0.55rem;
   border-radius: 50%;
 }
 
-.project-card__browser-dots span:nth-child(1) {
+.panel__browser-dots span:nth-child(1) {
   background-color: rgb(246 94 94 / 78%);
 }
 
-.project-card__browser-dots span:nth-child(2) {
+.panel__browser-dots span:nth-child(2) {
   background-color: rgb(248 176 74 / 88%);
 }
 
-.project-card__browser-dots span:nth-child(3) {
+.panel__browser-dots span:nth-child(3) {
   background-color: rgb(87 187 138 / 88%);
 }
 
-.project-card__browser-url {
+.panel__browser-url {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -710,44 +869,36 @@
   flex: 1;
   min-width: 0;
   margin-inline: 0.25rem;
-  padding: 0.22rem 0.7rem;
+  padding: 0.24rem 0.7rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-pill);
-  background-color: rgb(255 255 255 / 78%);
+  background-color: rgb(255 255 255 / 80%);
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  color: var(--text-muted);
+  color: var(--muted-text-safe);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.project-card__browser-url svg {
+.panel__browser-url svg {
   width: 0.8rem;
   height: 0.8rem;
   flex: none;
 }
 
-/* The scrolling window: a fixed-height, overflow-hidden frame. The height must
-   stay a plain length (not a responsive clamp) so the keyframe calculation
-   below can stop the drift exactly when the screenshot's footer reaches the
-   bottom edge of the frame. The unit value in `page-scroll` must match
-   `--frame-h` here; both are 420px. */
-.project-card__browser-scroll {
+/* The scrolling window. `--frame-h` and the literal value in the keyframe
+   below must stay in step; both are 420px. */
+.panel__browser-scroll {
   --frame-h: 420px;
   position: relative;
   display: block;
   height: var(--frame-h);
   overflow: hidden;
-  background:
-    linear-gradient(135deg, rgb(124 92 252 / 8%), transparent 40%),
-    linear-gradient(315deg, rgb(79 95 224 / 6%), transparent 45%),
-    rgb(255 255 255 / 55%);
+  background-color: rgb(255 255 255 / 60%);
 }
 
-/* The screenshot is its natural full-page size, uncropped: full column width,
-   auto height, no fixed height, no object-fit that would clip it. */
-.project-card__browser-scroll img {
+.panel__browser-scroll img {
   display: block;
   width: 100%;
   height: auto;
@@ -757,16 +908,13 @@
   animation: page-scroll 48s ease-in-out infinite;
 }
 
-/* Pause while the card is off-screen, so lower-end devices waste nothing on a
-   scroll nobody can see. */
-.project-card__browser-scroll.is-off img {
+.panel__browser-scroll.is-off img {
   animation-play-state: paused;
 }
 
 /* Scrolls the whole page top-to-bottom and holds at the footer before easing
-   back up. `-100%` is the screenshot's own rendered height, so adding the
-   frame height stops the image exactly when its bottom edge meets the frame's
-   bottom edge — it never overshoots into blank space. */
+   back up. `-100%` is the screenshot's rendered height; adding the frame
+   height stops the image exactly at the frame's bottom edge. */
 @keyframes page-scroll {
   0% {
     transform: translateY(0);
@@ -782,142 +930,86 @@
   }
 }
 
-/* Refined-motion users freeze on a static frame. */
 @media (prefers-reduced-motion: reduce) {
-  .project-card__browser-scroll img {
+  .panel__browser-scroll img {
     animation: none;
   }
 }
 
-.project-card__corner {
+/* A smaller phone frame overlapping the browser frame's lower corner. */
+.panel__phone {
   position: absolute;
-  top: 2.6rem;
-  right: var(--space-sm);
-  box-shadow: var(--shadow-sm);
+  left: -1.25rem;
+  bottom: -1.25rem;
+  width: 7.5rem;
+  padding: 0.35rem;
+  border-radius: 1.4rem;
+  background: linear-gradient(165deg, #f6f5fa, #dcdae6);
+  box-shadow: var(--shadow-float);
 }
 
-/* --- Card body ----------------------------------------------------------- */
+.panel__phone-screen {
+  height: 13rem;
+  border-radius: 1.05rem;
+  overflow: hidden;
+  background-color: #fff;
+}
 
-.project-card__row {
+.panel__phone-screen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* --- Panel copy -------------------------------------------------------------- */
+
+.project-panel__copy {
+  display: grid;
+  gap: var(--space-sm);
+  align-content: start;
+}
+
+.project-panel__title {
+  font-size: var(--fs-h3);
+  color: var(--text-strong);
+}
+
+.project-panel__tags {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
   gap: var(--space-2xs);
 }
 
-.project-card__row .project-card__title {
-  margin-top: var(--space-sm);
-  margin-bottom: 0;
-}
-
-.project-card__title {
-  font-size: var(--fs-h4);
-}
-
-.project-card__tag {
-  display: inline-flex;
-  align-items: center;
-  margin-top: var(--space-sm);
-  padding: 0.22rem 0.7rem;
-  border-radius: var(--radius-pill);
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-medium);
-  line-height: 1.4;
-}
-
-/* The pastel tag chip pairs (§1.2a): amber, lavender, indigo, then teal. */
-.project-card__tag--n0 {
-  background-color: var(--chip-amber-bg);
-  color: var(--chip-amber-ink);
-}
-
-.project-card__tag--n1 {
-  background-color: var(--chip-lav-bg);
-  color: var(--chip-lav-ink);
-}
-
-.project-card__tag--n2 {
-  background-color: var(--chip-indigo-bg);
-  color: var(--chip-indigo-ink);
-}
-
-.project-card__tag--n3 {
-  background-color: var(--chip-teal-bg);
-  color: var(--chip-teal-ink);
-}
-
-.project-card__kind {
-  margin-top: var(--space-2xs);
-  margin-bottom: 0;
+.project-panel__desc {
+  max-width: 52ch;
   font-size: var(--fs-sm);
   color: var(--text-body);
 }
 
-.project-card__summary {
-  margin-bottom: 0;
-  font-size: var(--fs-sm);
-  color: var(--text-body);
-}
-
-/* The brand-coloured tool icon row (§1.2a). */
-.project-card__tools {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  margin: var(--space-2xs) 0 0;
-}
-
-.tool-icon {
-  display: inline-flex;
-}
-
-.tool-icon svg {
-  display: block;
-}
-
-/* The small pill link at the foot of the shipped cards. */
-.project-card__visit {
-  display: inline-flex;
-  align-items: center;
+.project-panel__visit {
   justify-self: start;
-  gap: 0.4rem;
-  min-height: 40px;
-  margin-top: var(--space-sm);
-  padding-inline: 1.15rem;
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-pill);
-  background-color: var(--glass-bg);
-  font-family: var(--font-display);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-heading);
-  color: var(--text-strong);
-  text-decoration: none;
-  transition:
-    border-color var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
+  margin-top: var(--space-xs);
 }
 
-.project-card__visit:hover,
-.project-card__visit:focus-visible {
-  border-color: rgb(124 92 252 / 40%);
-  color: var(--c-violet-ink);
+/* --- Mobile: phone frame + page flip ----------------------------------------
+   Only the phone mockup on mobile, flipping between the projects with a 3D
+   page-flip, swipe, prev/next and dot indicators. No scrolling effect within
+   one frame; motion comes from the flip.
+   ------------------------------------------------------------------------ */
+
+.project-panel--mobile {
+  display: grid;
+  gap: var(--space-lg);
 }
 
-.project-card__visit svg {
-  width: 1.05em;
-  height: 1.05em;
-  flex: none;
-}
-
-/* --- Mobile card: phone frame + page flip --------------------------------
-   A single phone mockup that flips between the real projects with a 3D
-   rotateY page-flip, controlled by swipe or the prev/next taps and dot
-   indicators. This replaces the desktop browser frames entirely under the
-   breakpoint; the swap is handled in React, not by stretching one frame.
-   --------------------------------------------------------------------- */
-
-.project-card--mobile {
-  gap: var(--space-2xs);
+.project-panel--mobile .project-panel__title,
+.project-panel--mobile .project-panel__tags,
+.project-panel--mobile .project-panel__desc,
+.project-panel--mobile .project-panel__visit {
+  text-align: center;
+  justify-self: center;
 }
 
 .mobile-phone {
@@ -942,7 +1034,7 @@
   width: 5rem;
   height: 1.15rem;
   border-radius: var(--radius-pill);
-  background-color: var(--c-dark-btn);
+  background-color: var(--dark-btn);
   transform: translateX(-50%);
 }
 
@@ -961,10 +1053,6 @@
   will-change: transform;
 }
 
-/* Static top-crop of the same full-page screenshot (v11): the phone shows the
-   hero/visible-area strip only; motion comes from the page flip between
-   projects, not from scrolling within one. object-position: top keeps the
-   crop anchored to the top of the page. */
 .mobile-phone__screen img {
   display: block;
   width: 100%;
@@ -979,7 +1067,6 @@
   justify-content: center;
   gap: var(--space-md);
   margin-top: var(--space-sm);
-  margin-bottom: var(--space-2xs);
 }
 
 .mobile-phone__dots {
@@ -992,7 +1079,7 @@
   width: 0.5rem;
   height: 0.5rem;
   border-radius: var(--radius-pill);
-  background-color: rgb(22 22 28 / 20%);
+  background-color: rgb(22 22 28 / 22%);
   transition:
     width var(--dur-fast) var(--ease),
     background-color var(--dur-fast) var(--ease);
@@ -1000,16 +1087,16 @@
 
 .mobile-phone__dot.is-active {
   width: 1.25rem;
-  background-color: var(--c-violet-ink);
+  background-color: var(--violet);
 }
 
-.projects__more {
-  margin-top: var(--space-xl);
-}
-
-/* --- Process ------------------------------------------------------------- */
+/* --- Process -----------------------------------------------------------------
+   Four glass cards joined by a thin connecting line. Step numbers stay off
+   (earlier brief feedback); icons do the walking.
+   ------------------------------------------------------------------------ */
 
 .process__grid {
+  position: relative;
   display: grid;
   gap: var(--space-lg);
   margin: 0;
@@ -1020,75 +1107,160 @@
 @media (min-width: 46rem) {
   .process__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-md);
   }
 }
 
 @media (min-width: 70rem) {
   .process__grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--space-md);
+  }
+}
+
+/* The connecting line runs behind the top of each card. */
+@media (min-width: 70rem) {
+  .process__grid::before {
+    content: '';
+    position: absolute;
+    top: 3rem;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--border-strong),
+      var(--border-strong),
+      transparent
+    );
   }
 }
 
 .process__step {
   position: relative;
   display: grid;
+  justify-items: start;
   align-content: start;
-  gap: var(--space-2xs);
+  gap: var(--space-sm);
   height: 100%;
-  padding: var(--space-lg);
 }
 
 .process__title {
-  margin-bottom: var(--space-3xs);
   font-size: var(--fs-h4);
+  color: var(--text-strong);
 }
 
 .process__summary {
-  margin-bottom: 0;
   font-size: var(--fs-sm);
+  line-height: 1.6;
   color: var(--text-body);
 }
 
-/* --- Contact -------------------------------------------------------------- */
+/* --- Testimonials ------------------------------------------------------------
+   Two large frosted-glass review cards (brief §3.9). Cards render an explicit
+   "Review coming soon" state rather than any invented text.
+   ------------------------------------------------------------------------ */
 
-/* The section is a normal light section; only this local orb is tinted violet,
-   per the brief. The global orbs stay cool so the page keeps one ground.
-
-   The clipping wrapper is what stops the orb bleeding past the section edge
-   from creating horizontal scroll. It carries no focusable children, so
-   clipping cannot cut off a focus ring: the content sits outside it in
-   .container, which is a later sibling and paints above. */
-.contact__glow {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  border-radius: inherit;
-  pointer-events: none;
+.testimonials__grid {
+  display: grid;
+  gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-/* `.orb--local` sets no size, so this orb supplies its own. */
-.contact__orb {
-  top: 50%;
-  right: -12rem;
-  width: 34rem;
-  height: 34rem;
-  margin-top: -17rem;
-  background-color: rgb(124 92 252 / 22%);
-}
-
-@media (max-width: 47.99rem) {
-  .contact__orb {
-    right: -14rem;
-    width: 24rem;
-    height: 24rem;
-    margin-top: -12rem;
+@media (min-width: 60rem) {
+  .testimonials__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-lg);
   }
 }
 
-/* Left column carries the heading, supporting copy and contact details; the
-   form sits on the right, per the brief. */
+.testimonial {
+  display: grid;
+  gap: var(--space-md);
+  align-content: start;
+}
+
+.testimonial__quote-icon {
+  display: grid;
+  place-items: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: var(--radius-md);
+  background-color: var(--chip-lav-bg);
+  color: var(--chip-lav-ink);
+}
+
+.testimonial__quote-icon svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+/* A refined "coming soon" state: the business name, never fake copy. */
+.testimonial__soon {
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.testimonial__soon strong {
+  color: var(--text-strong);
+  font-style: normal;
+}
+
+.testimonial__text {
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--text-strong);
+}
+
+.testimonial__person {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--border);
+}
+
+.testimonial__avatar {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  border-radius: var(--radius-pill);
+  background-image: linear-gradient(150deg, var(--violet), var(--indigo));
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+}
+
+.testimonial__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--text-strong);
+}
+
+.testimonial__role {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+/* --- Contact -----------------------------------------------------------------
+   A midnight band. Left: heading, one line, direct contact rows. Right: the
+   frosted form card (brief §3.10).
+   ------------------------------------------------------------------------ */
+
+/* The decorative wireframe pokes past the section's right edge; `clip`
+   (horizontally only) keeps it visible without causing page scroll. */
+.contact {
+  overflow-x: clip;
+}
+
 .contact__grid {
   display: grid;
   gap: var(--space-xl);
@@ -1096,51 +1268,22 @@
 
 @media (min-width: 64rem) {
   .contact__grid {
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
     gap: var(--space-2xl);
     align-items: start;
   }
 }
 
-.contact__form {
+.contact__intro {
   display: grid;
-  gap: var(--space-md);
-}
-
-.contact__submit {
-  display: grid;
-  gap: var(--space-2xs);
-  justify-items: start;
-}
-
-.contact__submit .btn {
-  min-height: 48px;
-}
-
-.contact__submit .btn:disabled {
-  cursor: progress;
-  opacity: 0.7;
-}
-
-.contact__card {
-  padding: var(--space-lg);
-}
-
-.contact__card-title {
-  margin-bottom: var(--space-2xs);
-  font-size: var(--fs-h4);
-}
-
-.contact__card-text {
-  margin-bottom: var(--space-md);
-  color: var(--text-body);
-  font-size: var(--fs-sm);
+  gap: var(--space-sm);
+  max-width: 48ch;
 }
 
 .contact__links {
   display: grid;
   gap: var(--space-2xs);
-  margin: 0;
+  margin: var(--space-xl) 0 0;
   padding: 0;
   list-style: none;
 }
@@ -1150,19 +1293,18 @@
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: var(--space-sm);
-  min-height: 56px;
+  min-height: 60px;
   padding: var(--space-2xs);
   border-radius: var(--radius-md);
   text-decoration: none;
-  color: var(--text-strong);
+  color: #fff;
   transition: background-color var(--dur-base) var(--ease);
 }
 
 .contact__link:hover {
-  background-color: rgb(255 255 255 / 60%);
+  background-color: var(--glass-dark);
 }
 
-/* Not interactive, so no hover affordance. */
 .contact__link--static {
   cursor: default;
 }
@@ -1174,17 +1316,17 @@
 .contact__link-icon {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: var(--radius-md);
-  background-color: var(--chip-lav-bg);
-  color: var(--chip-lav-ink);
+  background-color: rgb(124 92 252 / 25%);
+  color: var(--violet-soft);
 }
 
 .contact__link-label {
   display: block;
   font-size: var(--fs-xs);
-  color: var(--text-muted);
+  color: rgb(255 255 255 / 55%);
 }
 
 .contact__link-value {
@@ -1195,34 +1337,60 @@
   overflow-wrap: anywhere;
 }
 
-/* --- Footer --------------------------------------------------------------- */
+/* The frosted form card on the dark band. */
+.contact__card {
+  padding: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+  border: 1px solid var(--glass-dark-line);
+  border-radius: var(--radius-panel);
+  background-color: var(--glass-dark);
+  box-shadow: var(--shadow-lg);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .contact__card {
+    background-color: rgb(255 255 255 / 9%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    backdrop-filter: blur(24px) saturate(140%);
+  }
+}
+
+.contact__form {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.contact__submit {
+  display: grid;
+  gap: var(--space-xs);
+  justify-items: start;
+}
+
+/* --- Footer -------------------------------------------------------------------
+   Continues the midnight band: logo, nav, contact details, socials, copyright.
+   ---------------------------------------------------------------------------- */
 
 .footer {
-  --text-strong: #000;
-  --text-body: #000;
-  --text-muted: #000;
+  --text-strong: #fff;
+  --text-body: var(--on-dark);
+  --text-muted: rgb(255 255 255 / 60%);
+  --text-accent: var(--violet-soft);
   position: relative;
-  overflow: hidden;
-  padding-block: var(--space-xl) var(--space-lg);
+  background-color: var(--midnight);
+  color: var(--on-dark);
+  padding-block-start: clamp(2rem, 5vw, 3.5rem);
+  padding-block-end: clamp(1.5rem, 4vw, 2.5rem);
 }
 
-/* The page stays one ground; this local orb lets the violet glow from Contact
-   keep bleeding down into the footer instead of stopping at the section edge.
-   It sits behind the grid (which is painted above with its own z-index). */
-.footer__glow {
+.footer::before {
+  content: '';
   position: absolute;
   inset: 0;
-  z-index: 0;
-  overflow: hidden;
+  background-image: linear-gradient(
+    180deg,
+    rgb(30 27 94 / 0%),
+    rgb(30 27 94 / 40%)
+  );
   pointer-events: none;
-}
-
-.footer__orb {
-  top: -18rem;
-  right: -10rem;
-  width: 40rem;
-  height: 40rem;
-  background-color: rgb(124 92 252 / 16%);
 }
 
 .footer > .container {
@@ -1232,7 +1400,7 @@
 
 .footer__grid {
   display: grid;
-  gap: var(--space-lg);
+  gap: var(--space-xl);
 }
 
 @media (min-width: 46rem) {
@@ -1252,12 +1420,12 @@
 .footer__text {
   max-width: 34ch;
   margin-top: var(--space-sm);
-  color: var(--text-muted);
   font-size: var(--fs-sm);
+  color: var(--text-muted);
 }
 
 .footer__col-title {
-  margin-bottom: var(--space-2xs);
+  margin-bottom: var(--space-md);
   font-size: var(--fs-eyebrow);
   font-weight: var(--fw-bold);
   letter-spacing: var(--ls-eyebrow);
@@ -1284,7 +1452,7 @@
 }
 
 .footer__list a:hover {
-  color: var(--text-strong);
+  color: #fff;
 }
 
 .footer__social {
@@ -1301,7 +1469,7 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-dark-line);
   border-radius: var(--radius-pill);
   color: var(--text-muted);
   transition:
@@ -1310,14 +1478,14 @@
 }
 
 .footer__social-link:hover {
-  border-color: var(--c-violet);
-  color: var(--accent-ink);
+  border-color: var(--violet-soft);
+  color: var(--violet-soft);
 }
 
 .footer__location {
   margin-top: var(--space-sm);
-  color: var(--text-muted);
   font-size: var(--fs-xs);
+  color: var(--text-muted);
 }
 
 .footer__bar {
@@ -1328,12 +1496,12 @@
   gap: var(--space-sm);
   margin-top: var(--space-xl);
   padding-top: var(--space-md);
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--glass-dark-line);
 }
 
 .footer__copy {
-  color: var(--text-muted);
   font-size: var(--fs-xs);
+  color: var(--text-muted);
 }
 
 .footer__top-link {
@@ -1349,7 +1517,7 @@
 }
 
 .footer__top-link:hover {
-  color: var(--text-strong);
+  color: #fff;
 }
 
 .footer__link-arrow {

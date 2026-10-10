@@ -4,14 +4,14 @@ import Icon from '../ui/Icon.jsx'
 import { processSteps } from '../../data/process.js'
 
 /**
- * The four-step process, as a row of frosted cards.
- *
- * Each step carries an icon, a short title and a one-line description.
+ * The four-step process (brief §3.8): glass cards in a row joined by a thin
+ * connecting line. Step numbers stay off (earlier brief feedback), so each
+ * card is an icon chip, a title and one line.
  */
 export default function Process() {
   return (
     <section
-      className="section process"
+      className="section band process"
       id="process"
       aria-labelledby="process-title"
     >
@@ -19,23 +19,28 @@ export default function Process() {
         <SectionHeading
           id="process-title"
           eyebrow="My process"
-          title="How I Work"
-          split
+          title={
+            <>
+              A Simple Process <span className="hi">You Can Follow</span>
+            </>
+          }
         />
 
-        <ol className="process__grid">
-          {processSteps.map((step, index) => (
-            <Reveal as="li" key={step.title} delay={index * 70}>
-              <article className="card process__step">
-                <span className={`chip chip--n${index % 4}`}>
-                  <StepIcon index={index} />
-                </span>
-                <h3 className="process__title">{step.title}</h3>
-                <p className="process__summary">{step.summary}</p>
-              </article>
-            </Reveal>
-          ))}
-        </ol>
+        <Reveal>
+          <ol className="process__grid">
+            {processSteps.map((step, index) => (
+              <Reveal as="li" key={step.title} delay={index * 80}>
+                <article className="card process__step">
+                  <span className={`chip chip--n${index % 4}`} aria-hidden="true">
+                    <StepIcon index={index} />
+                  </span>
+                  <h3 className="process__title">{step.title}</h3>
+                  <p className="process__summary">{step.summary}</p>
+                </article>
+              </Reveal>
+            ))}
+          </ol>
+        </Reveal>
       </div>
     </section>
   )

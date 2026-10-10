@@ -6,32 +6,39 @@ import Button from '../ui/Button.jsx'
 import { brand, ctaNavLabel, navItems } from '../../data/site.js'
 
 /**
- * Sticky navigation.
+ * Floating frosted pill navigation.
+ *
+ * Over the dark hero the pill is dark glass; once the hero has scrolled out it
+ * switches to light glass (`nav--light`), so it always sits comfortably on
+ * whichever surface is beneath it.
  *
  * On narrow screens the links move into a drawer. The drawer is a labelled
- * dialog: it traps nothing but does move focus inside on open, returns focus
- * to the toggle on close, closes on Escape, and locks page scroll while open.
+ * dialog: it moves focus inside on open, returns focus to the toggle on close,
+ * closes on Escape, and locks page scroll while open.
  *
- * An `IntersectionObserver` marks which section is currently in view, so the
- * active link can be announced with `aria-current`.
- *
- * The bar itself is a frosted glass surface with a centred pill group of links,
- * per the brief. The pill is a single `aria-current` target rather than a set of
- * tabs, so each link stays an ordinary navigation link.
+ * An IntersectionObserver marks which section is currently in view, so the
+ * active link is announced with `aria-current`.
  */
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [activeId, setActiveId] = useState(null)
-  const [scrolled, setScrolled] = useState(false)
+  const [light, setLight] = useState(false)
   const toggleRef = useRef(null)
   const drawerRef = useRef(null)
 
-  // Mark the header once the page has moved, so it can gain a border.
+  // Switch the pill to light glass once the dark hero is out of view.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    if (typeof IntersectionObserver === 'undefined') return
+
+    const hero = document.getElementById('top')
+    if (!hero) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setLight(!entry.isIntersecting),
+      { threshold: 0 },
+    )
+    observer.observe(hero)
+    return () => observer.disconnect()
   }, [])
 
   // Highlight the section nearest the top of the viewport.
@@ -74,7 +81,6 @@ export default function Navbar() {
     document.body.style.overflow = 'hidden'
     document.addEventListener('keydown', onKeyDown)
 
-    // Wait a frame so the drawer is focusable before focus moves into it.
     const raf = requestAnimationFrame(() => {
       drawerRef.current?.querySelector('a, button')?.focus()
     })
@@ -96,47 +102,51 @@ export default function Navbar() {
     return () => mq.removeEventListener('change', onChange)
   }, [])
 
+  const classes = ['nav', light ? 'nav--light' : ''].filter(Boolean).join(' ')
+
   return (
-    <header className={`nav ${scrolled ? 'nav--scrolled' : ''}`.trim()}>
-      <div className="container nav__inner">
-        <a
-          className="nav__brand"
-          href="#top"
-          aria-label={`${brand.name}, back to top`}
-        >
-          <Logo />
-        </a>
+    <header className={classes}>
+      <div className="container">
+        <div className="nav__pill">
+          <a
+            className="nav__brand"
+            href="#top"
+            aria-label={`${brand.name}, back to top`}
+          >
+            <Logo />
+          </a>
 
-        <nav className="nav__links" aria-label="Primary">
-          {navItems.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              className={`nav__link ${activeId === item.id ? 'is-active' : ''}`.trim()}
-              aria-current={activeId === item.id ? 'true' : undefined}
-            >
-              <span className="nav__link-label">{item.label}</span>
-            </a>
-          ))}
-        </nav>
+          <nav className="nav__links" aria-label="Primary">
+            {navItems.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className={`nav__link ${activeId === item.id ? 'is-active' : ''}`.trim()}
+                aria-current={activeId === item.id ? 'true' : undefined}
+              >
+                <span className="nav__link-label">{item.label}</span>
+              </a>
+            ))}
+          </nav>
 
-        <div className="nav__actions">
-          <Button href="#contact" icon={ArrowUpRight}>
-            {ctaNavLabel}
-          </Button>
+          <div className="nav__actions">
+            <Button href="#contact" icon={ArrowUpRight}>
+              {ctaNavLabel}
+            </Button>
+          </div>
+
+          <button
+            ref={toggleRef}
+            className="nav__toggle"
+            type="button"
+            aria-expanded={open}
+            aria-controls="nav-drawer"
+            onClick={() => setOpen((value) => !value)}
+          >
+            {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+            <span className="u-sr-only">{open ? 'Close menu' : 'Open menu'}</span>
+          </button>
         </div>
-
-        <button
-          ref={toggleRef}
-          className="nav__toggle"
-          type="button"
-          aria-expanded={open}
-          aria-controls="nav-drawer"
-          onClick={() => setOpen((value) => !value)}
-        >
-          {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-          <span className="u-sr-only">{open ? 'Close menu' : 'Open menu'}</span>
-        </button>
       </div>
 
       {/* Kept in the DOM so aria-controls always resolves. */}

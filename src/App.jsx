@@ -1,10 +1,13 @@
+import UtilityBar from './components/layout/UtilityBar.jsx'
 import Navbar from './components/layout/Navbar.jsx'
 import Footer from './components/layout/Footer.jsx'
 import Hero from './components/sections/Hero.jsx'
+import TechMarquee from './components/sections/TechMarquee.jsx'
 import About from './components/sections/About.jsx'
-import Skills from './components/sections/Skills.jsx'
+import ServicesBand from './components/sections/ServicesBand.jsx'
 import Projects from './components/sections/Projects.jsx'
 import Process from './components/sections/Process.jsx'
+import Testimonials from './components/sections/Testimonials.jsx'
 import Contact from './components/sections/Contact.jsx'
 
 import './styles/tokens.css'
@@ -14,14 +17,16 @@ import './styles/components.css'
 import './styles/sections.css'
 
 /**
- * Section order: hero, about, skills, selected work, process, contact.
+ * Midnight Glass portfolio (v13 brief).
  *
- * Skills & Services is a single 4-up grid. There is no standalone Services
- * section, no testimonials, and no technology logo wall. Numeric stats,
- * counters and logo walls stay off the page.
+ * Section order: utility bar, nav, hero, technologies, about, services,
+ * selected work, process, reviews, contact, footer.
  *
- * The soft blurred orbs are fixed to the viewport behind everything, so the
- * whole page shares one airy ground rather than alternating bands.
+ * All sections share one light frosted-glass ground so the page reads as one
+ * calm surface; the deep midnight appears only in the hero, nav (over the
+ * hero), contact band and footer. Numeric stats, counters and em dashes stay
+ * off the page; credibility comes from real projects, real reviews and clear
+ * writing.
  */
 export default function App() {
   return (
@@ -30,21 +35,17 @@ export default function App() {
         Skip to content
       </a>
 
-      {/* Decorative colour glows. Hidden from assistive tech. */}
-      <div className="orbs" aria-hidden="true">
-        <span className="orb orb--silver" />
-        <span className="orb orb--silver-alt" />
-        <span className="orb orb--violet" />
-      </div>
-
+      <UtilityBar />
       <Navbar />
 
       <main id="main">
         <Hero />
+        <TechMarquee />
         <About />
-        <Skills />
+        <ServicesBand />
         <Projects />
         <Process />
+        <Testimonials />
         <Contact />
       </main>
 

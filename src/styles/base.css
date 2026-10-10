@@ -13,13 +13,12 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  /* Anchors clear the sticky header instead of hiding underneath it. */
-  scroll-padding-top: calc(var(--nav-height) + var(--space-md));
+  scroll-padding-top: calc(var(--nav-height) + var(--space-sm));
 }
 
 body {
   min-height: 100dvh;
-  background-color: var(--c-bg);
+  background-color: var(--lavender);
   color: var(--text-body);
   font-family: var(--font-body);
   font-size: var(--fs-base);
@@ -58,7 +57,7 @@ ol[class] {
 }
 
 a {
-  color: var(--accent-ink);
+  color: var(--text-accent);
   text-underline-offset: 0.2em;
 }
 
@@ -72,7 +71,7 @@ h4 {
   font-weight: var(--fw-heading);
   line-height: var(--lh-heading);
   letter-spacing: var(--ls-heading);
-  color: var(--text-strong, var(--text-strong));
+  color: var(--text-strong);
   text-wrap: balance;
 }
 
@@ -80,7 +79,7 @@ h1 {
   font-size: var(--fs-h1);
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-extrabold);
 }
 
 h2 {
@@ -100,9 +99,9 @@ p {
   text-wrap: pretty;
 }
 
-strong,
-b {
-  font-weight: var(--fw-heading);
+/* Two-tone headings: the key phrase sits in the violet accent. */
+.hi {
+  color: var(--text-accent);
 }
 
 /* --- Shared type --------------------------------------------------------- */
@@ -112,13 +111,10 @@ b {
   margin-bottom: var(--space-sm);
   font-family: var(--font-display);
   font-size: var(--fs-eyebrow);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-medium);
   letter-spacing: var(--ls-eyebrow);
   text-transform: uppercase;
-  /* Section labels are the one accent-coloured text on the page, matched to
-     the fancy violet #7C5CFC but using the darker #6B48EE because 12px text
-     needs at least 4.5:1 and #7C5CFC only reaches 3.97:1. */
-  color: var(--c-violet-ink);
+  color: var(--text-accent);
 }
 
 .lead {
@@ -128,14 +124,21 @@ b {
 }
 
 /* --- Focus ---------------------------------------------------------------
-   Visible on both surfaces. The ring is drawn in two parts so it stays
-   legible whether it lands on near-black or off-white.
+   Visible on both surfaces. Drawn in two parts so it stays legible whether it
+   lands on near-black midnight or off-white lavender.
    --------------------------------------------------------------------- */
 
 :focus-visible {
-  outline: 2px solid var(--c-violet);
+  outline: 2px solid var(--violet);
   outline-offset: 3px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
+}
+
+@supports not selector(:focus-visible) {
+  :focus {
+    outline: 2px solid var(--violet);
+    outline-offset: 3px;
+  }
 }
 
 .skip-link {
@@ -145,13 +148,11 @@ b {
   z-index: 100;
   padding: var(--space-2xs) var(--space-sm);
   border-radius: var(--radius-pill);
-  background-color: var(--c-dark-btn);
+  background-color: var(--dark-btn);
   color: #fff;
   font-size: var(--fs-sm);
   font-weight: var(--fw-heading);
   text-decoration: none;
-  /* Off-screen until focused, rather than display:none, so it stays
-     reachable by keyboard. */
   transform: translateY(-200%);
   transition: transform var(--dur-base) var(--ease);
 }
@@ -177,13 +178,13 @@ b {
 /* --- Selection ----------------------------------------------------------- */
 
 ::selection {
-  background-color: var(--accent-fill);
+  background-color: var(--violet);
   color: #fff;
 }
 
 /* --- Reduced motion ------------------------------------------------------
-   Disables reveals, smooth scrolling and every transition. Transitions are
-   collapsed rather than removed so state changes still repaint instantly.
+   Disables reveals, the marquee, smooth scrolling and every transition.
+   Transitions are collapsed so state changes still repaint instantly.
    --------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {

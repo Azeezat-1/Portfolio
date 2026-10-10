@@ -1,25 +1,31 @@
 import { ArrowUpRight } from 'lucide-react'
 
 import Button from '../ui/Button.jsx'
+import Icon from '../ui/Icon.jsx'
 import Reveal from '../ui/Reveal.jsx'
-import { brand, heroEyebrow, heroPills } from '../../data/site.js'
+import {
+  brand,
+  heroBadge,
+  heroEyebrow,
+  heroFeatureCards,
+  heroPills,
+} from '../../data/site.js'
 import heroPhoto from '../../assets/photos/hero-portrait.jpg'
 
 /**
- * Opening section. Two columns: who she can help and how to start on the
- * left, a client-facing photograph on the right.
+ * Opening section: a full-width midnight-to-indigo panel with a large curved
+ * bottom edge, blueprint texture, and the portrait layered on a solid violet
+ * block with a thin offset outline. Two glass feature cards straddle the
+ * bottom edge, half over the dark panel and half over the light section below
+ * (brief §3.3).
  *
- * Copy is written for clients (benefits first, plain language, no framework
- * names) per the v11 brief. The right column is Azeezat's own photo in a
- * frosted glass frame — no code, no editors, no screens full of code anywhere
- * on the page.
- *
- * No floating number badges anywhere: the floating element over the frame is
- * a short text label, which the brief explicitly allows.
+ * The supplied photo is a JPEG, not a transparent PNG cutout, so the "person
+ * overlapping the panel edge" effect is approximated with the violet block.
+ * TODO(assets): replace with a transparent-background PNG if one is provided.
  */
 export default function Hero() {
   return (
-    <section className="section hero" id="top">
+    <section className="section hero band band--dark" id="top">
       <div className="container hero__inner">
         <div className="hero__main">
           <Reveal delay={40}>
@@ -37,8 +43,8 @@ export default function Hero() {
 
           <Reveal delay={180}>
             <ul className="hero__pills" aria-label="What she builds">
-              {heroPills.map((pill) => (
-                <li className="hero__pill" key={pill}>
+              {heroPills.map((pill, index) => (
+                <li className={`pill pill--n${index % 4}`} key={pill}>
                   {pill}
                 </li>
               ))}
@@ -47,7 +53,7 @@ export default function Hero() {
 
           <Reveal delay={220}>
             <div className="hero__actions">
-              <Button href="#projects" size="lg" icon={ArrowUpRight}>
+              <Button href="#projects" variant="inverse" size="lg" icon={ArrowUpRight}>
                 View My Work
               </Button>
               <Button href="#contact" variant="secondary" size="lg">
@@ -57,22 +63,34 @@ export default function Hero() {
           </Reveal>
         </div>
 
-        <Reveal className="hero__aside" delay={120}>
-          <figure className="hero__frame">
+        <Reveal className="hero__art" delay={140}>
+          <div className="hero__block">
             <img
-              className="hero__photo"
               src={heroPhoto}
               alt="Azeezat Yusuf, the developer behind Zeedev."
               loading="eager"
               decoding="async"
             />
-          </figure>
-
-          {/* A short text label overlapping the frame edge. Not a counter. */}
-          <div className="hero__badges">
-            <span className="hero__label">Clear, modern business websites</span>
           </div>
+
+          <span className="hero__badge">{heroBadge}</span>
         </Reveal>
+      </div>
+
+      <div className="container">
+        <div className="hero__cards">
+          {heroFeatureCards.map((card, index) => (
+            <article className="card hero__card" key={card.title}>
+              <span className={`chip chip--n${(index + 1) % 4}`} aria-hidden="true">
+                <Icon name={card.icon} />
+              </span>
+              <span className="hero__card-copy">
+                <span className="hero__card-title">{card.title}</span>
+                <span className="hero__card-text">{card.text}</span>
+              </span>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   )
