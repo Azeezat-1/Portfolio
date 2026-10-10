@@ -76,7 +76,7 @@ export const contactDetails = {
   /** Shown on the page. */
   email: 'info@zeedev.com',
   /** Where the shown address actually sends mail. */
-  emailHref: 'mailto:azeezaty.yusuf001@gmail.com',
+  emailHref: 'mailto:azeezaty.yusuf@gmail.com',
   phone: '+2348131663860',
   /** The same number, spaced to read. Cosmetic only. */
   phoneDisplay: '+234 813 166 3860',
@@ -97,7 +97,7 @@ export const socialLinks = [
     id: 'email',
     label: 'Email',
     handle: 'info@zeedev.com',
-    href: 'mailto:azeezaty.yusuf001@gmail.com',
+    href: 'mailto:azeezaty.yusuf@gmail.com',
     icon: 'mail',
     external: false,
   },
