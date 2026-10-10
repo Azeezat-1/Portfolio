@@ -21,6 +21,9 @@
 .section > .container {
   position: relative;
   z-index: 1;
+  /* Line content up with the nav pill's inner padding, so no section reaches
+     past the header. */
+  padding-inline: calc(clamp(1.25rem, 5vw, 2.5rem) + var(--content-inset));
 }
 
 /* --- Light band (default): lavender ground with glass surfaces ------------ */

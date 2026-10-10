@@ -173,6 +173,9 @@
   /* --- Layout ------------------------------------------------------------- */
   --container: 74rem;
   --nav-height: 4.25rem;
+  /* Inner inset shared by the nav pill and every section, so section content
+     always lines up with the header's content and never reaches past it. */
+  --content-inset: clamp(0.75rem, 2.5vw, 1.5rem);
 
   /* --- Blueprint texture (faint grid on dark bands) ------------------------ */
   --bp-line: rgb(255 255 255 / 5%);
