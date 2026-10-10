@@ -12,7 +12,7 @@ import Icon from '../ui/Icon.jsx'
 import SectionHeading from '../ui/SectionHeading.jsx'
 import Reveal from '../ui/Reveal.jsx'
 import { budgetRanges, formCopy, projectTypes } from '../../data/contact.js'
-import { hasEndpoint, submitContact } from '../../api/contact.js'
+import { submitContact } from '../../api/contact.js'
 import { contactDetails } from '../../data/site.js'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
@@ -54,6 +54,7 @@ export default function Contact() {
     projectType: '',
     budget: '',
     message: '',
+    company: '',
   })
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle') // idle | sending | success | error
@@ -118,9 +119,17 @@ export default function Contact() {
         projectType: values.projectType,
         budget: values.budget || null,
         message: values.message.trim(),
+        company: values.company,
       })
       setStatus('success')
-      setValues({ name: '', email: '', projectType: '', budget: '', message: '' })
+      setValues({
+        name: '',
+        email: '',
+        projectType: '',
+        budget: '',
+        message: '',
+        company: '',
+      })
       setErrors({})
     } catch {
       setStatus('error')
@@ -234,6 +243,18 @@ export default function Contact() {
               onSubmit={handleSubmit}
               noValidate
             >
+              <div className="u-sr-only" aria-hidden="true">
+                <label htmlFor={id('company')}>Company</label>
+                <input
+                  id={id('company')}
+                  name="company"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={values.company}
+                  onChange={(event) => setValue('company', event.target.value)}
+                />
+              </div>
               <div className="form-grid form-grid--2">
                 <Field
                   label="Name"
@@ -361,15 +382,13 @@ export default function Contact() {
                   {status === 'sending' ? formCopy.submitting : formCopy.submit}
                 </Button>
 
-                {!hasEndpoint ? (
-                  <p className="form-note">
-                    <Lock aria-hidden="true" />
-                    <span>
-                      The form is a demo: nothing leaves your device yet. A real
-                      handler will only use your details to reply.
-                    </span>
-                  </p>
-                ) : null}
+                <p className="form-note">
+                  <Lock aria-hidden="true" />
+                  <span>
+                    Your details are only used to reply to you. They are never
+                    shared or added to a mailing list.
+                  </span>
+                </p>
               </div>
 
               <p className="u-sr-only" role="status">

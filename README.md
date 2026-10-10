@@ -99,22 +99,25 @@ containers so they never add horizontal scroll.
 ## Structure
 
 ```
+api/
+  contact.js       serverless function that emails the contact form
 src/
   data/            all editable content
   components/
     brand/         logo mark
-    layout/        navbar, footer
-    project/       project cards (desktop + mobile) and tool icons
+    layout/        utility bar, navbar, footer
+    project/       project cards (desktop + mobile)
     sections/      one file per page section
     ui/            button, icon, reveal, section heading, card bits
   hooks/           useMediaQuery (project card variant switch)
   styles/          design tokens and CSS
-  api/             contact form transport
+  api/             contact form transport (posts to /api/contact)
 ```
 
 Sections render in this order, all on the same pale ground:
 
-Hero → About → Skills → Selected Work → Process → Contact, then the footer.
+Utility bar → Nav → Hero → Technologies → About → Services → Selected Work →
+Process → Reviews → Contact, then the footer.
 
 ### Project cards: two hard variants
 
@@ -202,19 +205,40 @@ Copy an existing entry in `projects` in `src/data/projects.js` and fill in
 ## The contact form
 
 The form validates on the client and reports errors inline, linked to each
-field with `aria-describedby`.
+field with `aria-describedby`. A hidden honeypot field (`company`) silently
+absorbs bots.
 
-Out of the box there is no server to receive submissions, so
-`src/api/contact.js` reports success without sending or storing anything. Wire
-up an endpoint before launch, or visitors will be told their message was sent
-when nothing was sent:
+Submissions are delivered by the site's own serverless function at
+`api/contact.js`, which emails the message to `CONTACT_TO`
+(`azeezaty.yusuf001@gmail.com`) with the visitor as the reply-to. It only ever
+sends to that fixed address, so it cannot be abused as an open relay. It needs
+one transport configured; set these in the Vercel project's Environment
+Variables (and in a local `.env` when running `vercel dev`). Copy
+`.env.example` as a starting point.
 
-```bash
-VITE_CONTACT_ENDPOINT=https://example.com/api/contact
+**Option A, Resend (recommended):**
+
+```
+RESEND_API_KEY=re_xxxxxxxx
+CONTACT_TO=azeezaty.yusuf001@gmail.com
+CONTACT_FROM="Zeedev website <azeezaty.yusuf001@gmail.com>"
 ```
 
-Set that variable and the form will POST JSON to it. Expect
-`{ name, email, projectType, message }` and return any 2xx status on success.
+**Option B, Gmail SMTP** (needs 2-Step Verification, then an
+[App Password](https://myaccount.google.com/apppasswords)):
+
+```
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_USER=azeezaty.yusuf001@gmail.com
+SMTP_PASS=your-16-character-app-password
+CONTACT_TO=azeezaty.yusuf001@gmail.com
+```
+
+With no transport set the function answers `500` and the form shows its error
+state. `npm run dev` (plain Vite) does not run the function; use
+`npx vercel dev` to exercise the form locally. To point the form at a different
+back end instead, set `VITE_CONTACT_ENDPOINT` at build time.
 
 ---
 
@@ -256,20 +280,23 @@ on the page; add real ones as described in "Adding a project" above.
 
 ## Deploying
 
-`npm run build` produces a fully static `dist/`. The build uses a relative
-`base`, so it can be served from a subdirectory as well as a domain root. Any
-static host works.
+`npm run build` produces a fully static `dist/` for the site. The build uses a
+relative `base`, so it can be served from a subdirectory as well as a domain
+root. The contact form additionally needs the `api/contact.js` function, so
+deploy to Vercel (which serves `dist/` and the `api/` function together) and
+add the environment variables described under "The contact form".
 
 ---
 
 ## Stack
 
 React 18, Vite 6, plain CSS with custom properties, `lucide-react` for icons,
-and `framer-motion` for the mobile page-flip transition. No CSS framework.
+`framer-motion` for the mobile page-flip transition, and `nodemailer` in the
+contact function's optional SMTP transport. No CSS framework.
 
 ---
 
 ## Notes
 
-`zeedev-portfolio-prompt-v11.md` in the project root is the source brief for
-the design. Where anything else disagrees with it, the brief wins.
+`zeedev-master-prompt-v13.md` in the project root is the source brief for the
+design. Where anything else disagrees with it, the brief wins.
