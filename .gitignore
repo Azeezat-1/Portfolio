@@ -21,7 +21,11 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
-# Superseded first draft of the brief. Zeedev.md is the authoritative copy.
 
-# Superseded first draft of the brief. Zeedev.md is the authoritative copy.
-\.md\ 
+# Local Vercel project link (created by `vercel link`)
+.vercel
+
+# Local secrets: keep them out of the repo
+token.md/
+*.token
+token.txt
