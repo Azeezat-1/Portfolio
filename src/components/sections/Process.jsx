@@ -14,6 +14,7 @@ export default function Process() {
       className="section band process"
       id="process"
       aria-labelledby="process-title"
+      data-nav-theme="light"
     >
       <div className="container">
         <SectionHeading

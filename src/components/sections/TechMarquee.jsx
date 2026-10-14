@@ -72,7 +72,11 @@ export default function TechMarquee() {
   })
 
   return (
-    <section className="section band marquee" aria-labelledby="tech-title">
+    <section
+      className="section band marquee"
+      aria-labelledby="tech-title"
+      data-nav-theme="light"
+    >
       <div className="container">
         <SectionHeading
           id="tech-title"

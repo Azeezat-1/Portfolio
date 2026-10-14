@@ -223,7 +223,7 @@ export function ProjectPanelMobile({ projects }) {
         </div>
       ) : null}
 
-      <div>
+      <div className="project-panel__copy">
         <h3 className="project-panel__title">{project.name}</h3>
         {project.tags && project.tags.length ? (
           <div className="project-panel__tags">

@@ -63,195 +63,313 @@
   justify-content: center;
 }
 
-@media (max-width: 47.999rem) {
+@media (max-width: 59.999rem) {
   .util {
     display: none;
   }
 }
 
-/* --- Navigation ------------------------------------------------------------
-   A floating frosted pill. Over the dark hero it uses dark glass; once the
-   hero has scrolled out it switches to light glass (done in Navbar.jsx with
-   `nav--light`). On mobile: a clean menu button with a smooth drawer.
+/* --- Navigation (header) ---------------------------------------------------
+   A full-width bar, not a floating pill: logo left, links centred with a violet
+   dot under the active one, one violet CTA pill right. The bar reads the
+   section behind its bottom edge (`data-nav-theme` in Navbar.jsx) and follows
+   it, so the dark style is never drawn over a light background. Once scrolled
+   (`data-scrolled`) it gains a frosted surface. Header-redesign brief.
    ------------------------------------------------------------------------ */
 
 .nav {
-  --text-strong: #fff;
-  --text-muted: rgb(255 255 255 / 60%);
   position: sticky;
-  top: var(--space-xs);
+  top: 0;
   z-index: 60;
-  padding-top: 0;
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 200ms var(--ease),
+    border-color 200ms var(--ease),
+    box-shadow 200ms var(--ease),
+    color 200ms var(--ease);
 }
 
-.nav__pill {
-  display: flex;
+.nav__inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: var(--space-md);
-  min-height: calc(var(--nav-height) - var(--space-xs));
-  padding: 0.4rem var(--content-inset);
-  border: 1px solid var(--dark-hairline);
-  border-radius: var(--radius-pill);
-  background-color: rgb(11 12 42 / 55%);
-  box-shadow: var(--shadow-lg);
-  color: var(--text-strong);
-  transition:
-    background-color var(--dur-base) var(--ease),
-    border-color var(--dur-base) var(--ease),
-    box-shadow var(--dur-base) var(--ease);
+  width: 100%;
+  max-width: 75rem; /* 1200px */
+  min-height: var(--nav-height);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+/* State 2: scrolled over a light section. */
+.nav[data-theme='light'][data-scrolled='true'] {
+  background-color: rgb(255 255 255 / 86%);
+  border-bottom-color: var(--nav-line);
+  box-shadow: 0 8px 30px rgb(22 22 60 / 6%);
+}
+
+/* State 3: over a dark section (dark hero, contact, footer). */
+.nav[data-theme='dark'] {
+  background-color: rgb(11 12 42 / 72%);
+  border-bottom-color: var(--nav-line-dk);
 }
 
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  .nav__pill {
-    background-color: rgb(11 12 42 / 60%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    backdrop-filter: blur(16px) saturate(140%);
+  .nav[data-theme='light'][data-scrolled='true'],
+  .nav[data-theme='dark'] {
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
   }
 }
 
-/* Once scrolled past the hero, the pill sits over the light sections and
-   switches to light glass. */
-.nav--light .nav__pill {
-  --text-strong: var(--ink);
-  background-color: rgb(255 255 255 / 62%);
-  border-color: var(--hairline);
-  box-shadow: var(--shadow-md);
-}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav[data-theme='light'][data-scrolled='true'] {
+    background-color: #fff;
+  }
 
-@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  .nav--light .nav__pill {
-    background-color: rgb(255 255 255 / 55%);
-    -webkit-backdrop-filter: blur(18px) saturate(150%);
-    backdrop-filter: blur(18px) saturate(150%);
+  .nav[data-theme='dark'] {
+    background-color: var(--midnight);
   }
 }
+
+/* --- Brand ---------------------------------------------------------------- */
 
 .nav__brand {
+  justify-self: start;
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  margin-right: auto;
   text-decoration: none;
 }
 
-.nav__links {
-  display: none;
-  align-items: center;
-  gap: 0.1rem;
-  padding: 0.2rem;
-  border-radius: var(--radius-pill);
+.nav__brand .logo {
+  gap: 0.75rem; /* 12px */
+  color: var(--ink);
 }
 
-@media (min-width: 68rem) {
+.nav__brand .logo__mark {
+  color: var(--violet);
+}
+
+.nav__brand .logo__mark svg {
+  width: 36px;
+  height: 36px;
+}
+
+.nav__brand .logo__text {
+  font-size: 1.375rem; /* 22px */
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.02em;
+}
+
+.nav[data-theme='dark'] .nav__brand .logo {
+  color: #fff;
+}
+
+.nav[data-theme='dark'] .nav__brand .logo__mark {
+  color: #fff;
+}
+
+/* --- Centre links --------------------------------------------------------- */
+
+.nav__links {
+  justify-self: center;
+  display: none;
+  align-items: center;
+  gap: 2.25rem; /* 36px */
+}
+
+@media (min-width: 60rem) {
   .nav__links {
     display: flex;
   }
 }
 
 .nav__link {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  min-height: 40px;
-  padding-inline: 0.85rem;
-  border-radius: var(--radius-pill);
+  min-height: 44px;
   font-family: var(--font-display);
-  font-size: var(--fs-sm);
+  font-size: 0.9375rem; /* 15px */
   font-weight: var(--fw-medium);
-  letter-spacing: 0.005em;
   text-decoration: none;
-  color: rgb(255 255 255 / 70%);
-  transition:
-    background-color var(--dur-base) var(--ease),
-    color var(--dur-base) var(--ease);
+  color: var(--nav-link);
+  transition: color 150ms var(--ease);
 }
 
 .nav__link:hover {
+  color: var(--violet);
+}
+
+.nav__link.is-active {
+  color: var(--ink);
+  font-weight: var(--fw-heading);
+}
+
+/* The violet dot centred 10px under the active label (no pill). */
+.nav__link.is-active::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 11px);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--violet);
+  transform: translateX(-50%);
+}
+
+.nav[data-theme='dark'] .nav__link {
+  color: var(--nav-link-dk);
+}
+
+.nav[data-theme='dark'] .nav__link:hover {
   color: #fff;
 }
 
-@media (min-width: 68rem) {
-  .nav__link.is-active {
-    background-color: rgb(255 255 255 / 12%);
-    color: #fff;
-  }
+.nav[data-theme='dark'] .nav__link.is-active {
+  color: #fff;
 }
 
-.nav--light .nav__link {
-  color: var(--text-muted);
+.nav[data-theme='dark'] .nav__link.is-active::after {
+  background-color: var(--violet-soft);
 }
 
-.nav--light .nav__link:hover {
-  color: var(--text-strong);
-}
-
-.nav--light .nav__link.is-active {
-  background-color: rgb(124 92 252 / 12%);
-  color: var(--accent-text);
-}
+/* --- CTA ------------------------------------------------------------------ */
 
 .nav__actions {
+  justify-self: end;
   display: none;
 }
 
-@media (min-width: 68rem) {
+@media (min-width: 60rem) {
   .nav__actions {
     display: flex;
   }
 }
 
+.nav__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 46px;
+  padding: 0 1.625rem; /* 26px */
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-size: 0.9375rem; /* 15px */
+  font-weight: var(--fw-heading);
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: var(--cta);
+  color: #fff;
+  box-shadow: 0 8px 22px rgb(107 72 240 / 35%);
+  transition:
+    background-color 200ms var(--ease),
+    color 200ms var(--ease),
+    box-shadow 200ms var(--ease),
+    transform 150ms var(--ease);
+}
+
+.nav__cta svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 150ms var(--ease);
+}
+
+.nav__cta:hover {
+  transform: translateY(-1px);
+}
+
+.nav__cta:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.nav__cta:focus-visible {
+  outline: 3px solid var(--violet);
+  outline-offset: 2px;
+}
+
+/* On dark the CTA becomes a white pill with midnight text, no glow. */
+.nav[data-theme='dark'] .nav__cta {
+  background-color: #fff;
+  color: var(--midnight);
+  box-shadow: none;
+}
+
+/* --- Menu button ---------------------------------------------------------- */
+
 .nav__toggle {
+  justify-self: end;
   display: grid;
   place-items: center;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--dark-hairline);
   border-radius: var(--radius-pill);
-  background-color: rgb(255 255 255 / 6%);
-  color: #fff;
+  background-color: var(--chip-lav-bg);
+  color: var(--chip-lav-text);
 }
 
 .nav__toggle svg {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
 }
 
-.nav--light .nav__toggle {
-  background-color: rgb(255 255 255 / 60%);
-  color: var(--text-strong);
-}
-
-@media (min-width: 68rem) {
+@media (min-width: 60rem) {
   .nav__toggle {
     display: none;
   }
 }
 
-/* --- Mobile drawer -------------------------------------------------------- */
+/* State 4: mobile bar (64px, logo left, round menu button right). */
+@media (max-width: 59.999rem) {
+  .nav__inner {
+    grid-template-columns: 1fr auto;
+    min-height: var(--nav-height-mobile);
+  }
+
+  .nav__brand .logo__mark svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* --- Mobile drawer --------------------------------------------------------
+   A full-width white sheet that slides down from the header. Stays white even
+   when the page behind is dark, so it is always readable.
+   ------------------------------------------------------------------------ */
 
 .nav-drawer {
   display: none;
 }
 
-@media (max-width: 67.999rem) {
+@media (max-width: 59.999rem) {
   .nav-drawer {
     position: fixed;
-    inset: var(--nav-height) 0 0;
-    z-index: 40;
+    left: 0;
+    right: 0;
+    top: var(--nav-height-mobile);
+    z-index: 55;
     display: grid;
     align-content: start;
-    gap: var(--space-xl);
-    padding: var(--space-lg) clamp(1.25rem, 5vw, 2.5rem) var(--space-xl);
+    gap: 0.25rem;
+    max-height: calc(100dvh - var(--nav-height-mobile));
+    padding: 1rem 1.5rem 2rem;
     overflow-y: auto;
     overscroll-behavior: contain;
-    background-color: var(--midnight);
-    color: var(--on-dark);
+    background-color: #fff;
+    border-bottom: 1px solid var(--nav-line);
+    box-shadow: 0 24px 60px rgb(20 18 70 / 12%);
+    color: var(--nav-link);
     visibility: hidden;
     opacity: 0;
     transform: translateY(-8px);
     transition:
-      opacity var(--dur-base) var(--ease),
-      transform var(--dur-base) var(--ease),
-      visibility 0s linear var(--dur-base);
+      opacity 220ms var(--ease),
+      transform 220ms var(--ease),
+      visibility 0s linear 220ms;
   }
 
   .nav-drawer.is-open {
@@ -259,8 +377,8 @@
     opacity: 1;
     transform: none;
     transition:
-      opacity var(--dur-base) var(--ease),
-      transform var(--dur-base) var(--ease),
+      opacity 220ms var(--ease),
+      transform 220ms var(--ease),
       visibility 0s;
   }
 }
@@ -272,27 +390,48 @@
 }
 
 .nav-drawer__link {
+  position: relative;
   display: flex;
   align-items: center;
-  min-height: 56px;
-  padding-block: var(--space-sm);
-  border-bottom: 1px solid var(--glass-dark-line);
+  min-height: 44px;
+  padding: 0.5rem 0 0.5rem 1rem;
+  border-bottom: 1px solid var(--nav-line);
   font-family: var(--font-display);
-  font-size: 1.375rem;
-  font-weight: var(--fw-heading);
-  letter-spacing: var(--ls-heading);
+  font-size: 1.25rem; /* 20px */
+  font-weight: var(--fw-medium);
   text-decoration: none;
-  color: #fff;
+  color: var(--nav-link);
+}
+
+.nav-drawer__link.is-active {
+  color: var(--ink);
+  font-weight: var(--fw-heading);
+}
+
+/* The active dot sits to the left of the label in the drawer. */
+.nav-drawer__link.is-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--violet);
+  transform: translateY(-50%);
 }
 
 .nav-drawer__foot {
-  display: grid;
-  gap: var(--space-md);
+  margin-top: 1rem;
 }
 
-.nav-drawer__foot .btn {
+/* The drawer CTA stays violet even when the page behind is dark, so it must
+   outrank the dark-theme `.nav__cta` rule above. */
+.nav .nav-drawer__foot .nav__cta {
   width: 100%;
-  min-height: 48px;
+  background-color: var(--cta);
+  color: #fff;
+  box-shadow: 0 8px 22px rgb(107 72 240 / 35%);
 }
 
 /* --- Hero ------------------------------------------------------------------
@@ -304,9 +443,19 @@
 .hero {
   z-index: 3;
   padding-top: clamp(2rem, 1rem + 4vw, 3.5rem);
+  /* Keep the dark panel behind the feature cards on small screens, so nothing
+     is cramped against (or straddling) the curved bottom edge. */
+  padding-bottom: clamp(2.5rem, 1.75rem + 3vw, 3.5rem);
   overflow: visible;
-  border-radius: 0 0 var(--radius-curve) var(--radius-curve);
+  border-radius: 0 0 2rem 2rem;
   color: var(--on-dark);
+}
+
+@media (min-width: 60rem) {
+  .hero {
+    padding-bottom: clamp(3.5rem, 2rem + 6vw, 6rem);
+    border-radius: 0 0 var(--radius-curve) var(--radius-curve);
+  }
 }
 
 .hero__inner {
@@ -452,13 +601,18 @@
   }
 }
 
-/* --- The two floating feature cards straddling the hero's bottom edge ------ */
+/* --- The two feature cards --------------------------------------------------
+   Solid white cards with their own dark text, so they stay legible over the
+   dark panel. Below 960px they sit fully inside the hero, with the panel's dark
+   background behind them. From 960px they straddle the curved bottom edge and
+   overlap the light section below. (Never use a translucent card with white
+   text across the dark/light boundary.)
+   ------------------------------------------------------------------------ */
 
 .hero__cards {
   display: grid;
   gap: var(--space-sm);
   margin-top: clamp(2rem, 1rem + 4vw, 4rem);
-  transform: translateY(50%);
 }
 
 @media (min-width: 48rem) {
@@ -468,11 +622,23 @@
   }
 }
 
+@media (min-width: 60rem) {
+  .hero__cards {
+    transform: translateY(50%);
+  }
+}
+
 .hero__card {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: var(--space-sm);
   align-items: start;
+  padding: 1.25rem;
+  border: 1px solid #e4e2ee;
+  border-radius: 1.25rem;
+  background-color: #fff;
+  box-shadow: 0 12px 32px rgb(22 22 60 / 8%);
+  color: var(--ink);
 }
 
 .hero__card-copy {
@@ -484,13 +650,13 @@
 .hero__card-title {
   font-size: var(--fs-sm);
   font-weight: var(--fw-bold);
-  color: #fff;
+  color: var(--ink);
 }
 
 .hero__card-text {
   font-size: var(--fs-sm);
   line-height: 1.5;
-  color: rgb(255 255 255 / 72%);
+  color: #5b6773;
 }
 
 /* --- Technologies marquee --------------------------------------------------
@@ -1005,11 +1171,16 @@
   gap: var(--space-lg);
 }
 
-.project-panel--mobile .project-panel__title,
-.project-panel--mobile .project-panel__tags,
-.project-panel--mobile .project-panel__desc,
-.project-panel--mobile .project-panel__visit {
+.project-panel--mobile .project-panel__copy {
+  justify-items: center;
   text-align: center;
+}
+
+.project-panel--mobile .project-panel__tags {
+  justify-content: center;
+}
+
+.project-panel--mobile .project-panel__visit {
   justify-self: center;
 }
 

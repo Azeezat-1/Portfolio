@@ -174,6 +174,7 @@ export default function Contact() {
       className="section band band--dark contact"
       id="contact"
       aria-labelledby="contact-title"
+      data-nav-theme="dark"
     >
       <span className="bp-wire" aria-hidden="true" />
 

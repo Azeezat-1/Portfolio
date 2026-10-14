@@ -21,7 +21,12 @@ import aboutPhoto from '../../assets/photos/about-portrait.jpg'
  */
 export default function About() {
   return (
-    <section className="section band about" id="about" aria-labelledby="about-title">
+    <section
+      className="section band about"
+      id="about"
+      aria-labelledby="about-title"
+      data-nav-theme="light"
+    >
       <div className="container about__grid">
         <Reveal className="about__media">
           <div className="about__blob" aria-hidden="true" />

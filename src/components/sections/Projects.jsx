@@ -22,6 +22,7 @@ export default function Projects() {
       className="section band projects"
       id="projects"
       aria-labelledby="projects-title"
+      data-nav-theme="light"
     >
       <div className="container">
         <SectionHeading

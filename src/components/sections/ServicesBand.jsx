@@ -14,6 +14,7 @@ export default function ServicesBand() {
       className="section band services"
       id="services"
       aria-labelledby="services-title"
+      data-nav-theme="light"
     >
       <div className="container">
         <SectionHeading

@@ -26,6 +26,7 @@ export default function Testimonials() {
       className="section band testimonials"
       id="reviews"
       aria-labelledby="reviews-title"
+      data-nav-theme="light"
     >
       <div className="container">
         <SectionHeading

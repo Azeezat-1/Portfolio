@@ -15,9 +15,9 @@ import heroPhoto from '../../assets/photos/hero-portrait.jpg'
 /**
  * Opening section: a full-width midnight-to-indigo panel with a large curved
  * bottom edge, blueprint texture, and the portrait layered on a solid violet
- * block with a thin offset outline. Two glass feature cards straddle the
- * bottom edge, half over the dark panel and half over the light section below
- * (brief §3.3).
+ * block with a thin offset outline. Two solid white feature cards with dark
+ * text sit inside the panel on mobile, and straddle the curved bottom edge from
+ * 960px up (brief §3.3).
  *
  * The supplied photo is a JPEG, not a transparent PNG cutout, so the "person
  * overlapping the panel edge" effect is approximated with the violet block.
@@ -25,7 +25,11 @@ import heroPhoto from '../../assets/photos/hero-portrait.jpg'
  */
 export default function Hero() {
   return (
-    <section className="section hero band band--dark" id="top">
+    <section
+      className="section hero band band--dark"
+      id="top"
+      data-nav-theme="dark"
+    >
       <div className="container hero__inner">
         <div className="hero__main">
           <Reveal delay={40}>
@@ -80,7 +84,7 @@ export default function Hero() {
       <div className="container">
         <div className="hero__cards">
           {heroFeatureCards.map((card, index) => (
-            <article className="card hero__card" key={card.title}>
+            <article className="hero__card" key={card.title}>
               <span className={`chip chip--n${(index + 1) % 4}`} aria-hidden="true">
                 <Icon name={card.icon} />
               </span>

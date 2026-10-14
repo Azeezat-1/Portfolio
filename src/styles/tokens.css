@@ -170,9 +170,20 @@
 
   --focus-ring: 0 0 0 2px var(--lavender), 0 0 0 4px var(--violet);
 
+  /* --- Header (navigation) --------------------------------------------------
+     Values from the header-redesign brief. The bar's colours depend on the
+     section behind its bottom edge, so both link tones exist.
+     ---------------------------------------------------------------------- */
+  --nav-link: #3f3f4d; /* links on light sections */
+  --nav-link-dk: #d9d8ea; /* links on dark sections */
+  --cta: #6b48f0; /* header button; white label passes AA (~5.4:1) */
+  --nav-line: #e4e2ee; /* hairline under the bar on light */
+  --nav-line-dk: rgb(255 255 255 / 12%); /* hairline under the bar on dark */
+
   /* --- Layout ------------------------------------------------------------- */
   --container: 74rem;
-  --nav-height: 4.25rem;
+  --nav-height: 4.5rem; /* 72px desktop bar */
+  --nav-height-mobile: 4rem; /* 64px mobile bar */
   /* Inner inset shared by the nav pill and every section, so section content
      always lines up with the header's content and never reaches past it. */
   --content-inset: clamp(0.75rem, 2.5vw, 1.5rem);

@@ -60,8 +60,8 @@ export const navItems = [
   { id: 'contact', label: 'Contact' },
 ]
 
-/** Label for the pill button in the nav. */
-export const ctaNavLabel = 'Start a Conversation'
+/** Label for the pill button in the nav. Shorter and clearer for clients. */
+export const ctaNavLabel = 'Start a Project'
 
 /**
  * Direct contact details.

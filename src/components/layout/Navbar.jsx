@@ -1,44 +1,74 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowUpRight, Menu, X } from 'lucide-react'
 
 import Logo from '../brand/Logo.jsx'
-import Button from '../ui/Button.jsx'
 import { brand, ctaNavLabel, navItems } from '../../data/site.js'
 
 /**
- * Floating frosted pill navigation.
+ * Site header (navigation bar).
  *
- * Over the dark hero the pill is dark glass; once the hero has scrolled out it
- * switches to light glass (`nav--light`), so it always sits comfortably on
- * whichever surface is beneath it.
+ * A full-width bar, not a floating pill: the logo sits left, the links are
+ * centred with a violet dot under the active one, and one violet CTA pill sits
+ * right. The bar reads the section behind its bottom edge (`data-nav-theme` on
+ * each section) and follows it, switching between the light and dark variants,
+ * so the dark style is never drawn over a light background or vice versa. It
+ * gains a frosted surface once the page is scrolled (`data-scrolled`).
  *
- * On narrow screens the links move into a drawer. The drawer is a labelled
- * dialog: it moves focus inside on open, returns focus to the toggle on close,
- * closes on Escape, and locks page scroll while open.
- *
- * An IntersectionObserver marks which section is currently in view, so the
- * active link is announced with `aria-current`.
+ * The utility bar sits above it in normal flow; the header sticks to the top
+ * once that bar scrolls away. Below 960px the links move into a full-width
+ * sheet with a focus trap.
  */
 export default function Navbar() {
   const [open, setOpen] = useState(false)
-  const [activeId, setActiveId] = useState(null)
-  const [light, setLight] = useState(false)
+  const [activeId, setActiveId] = useState(navItems[0]?.id ?? null)
+  const [theme, setTheme] = useState('dark')
+  const [scrolled, setScrolled] = useState(false)
+  const headerRef = useRef(null)
   const toggleRef = useRef(null)
   const drawerRef = useRef(null)
 
-  // Switch the pill to light glass once the dark hero is out of view.
+  const closeMenu = useCallback(() => {
+    setOpen(false)
+    toggleRef.current?.focus({ preventScroll: true })
+  }, [])
+
+  // Follow the section behind the header's bottom edge, and flag scrolling.
   useEffect(() => {
-    if (typeof IntersectionObserver === 'undefined') return
+    const update = () => {
+      setScrolled(window.scrollY > 8)
 
-    const hero = document.getElementById('top')
-    if (!hero) return
+      const header = headerRef.current
+      if (!header) return
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setLight(!entry.isIntersecting),
-      { threshold: 0 },
-    )
-    observer.observe(hero)
-    return () => observer.disconnect()
+      const band = header.getBoundingClientRect().bottom
+      let next = null
+      for (const el of document.querySelectorAll('[data-nav-theme]')) {
+        const rect = el.getBoundingClientRect()
+        if (rect.top <= band && rect.bottom > band) {
+          next = el.getAttribute('data-nav-theme')
+          break
+        }
+      }
+      if (next) setTheme(next)
+    }
+
+    let raf = 0
+    const onScroll = () => {
+      if (raf) return
+      raf = requestAnimationFrame(() => {
+        raf = 0
+        update()
+      })
+    }
+
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
   }, [])
 
   // Highlight the section nearest the top of the viewport.
@@ -71,10 +101,7 @@ export default function Navbar() {
     if (!open) return
 
     const onKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        setOpen(false)
-        toggleRef.current?.focus()
-      }
+      if (event.key === 'Escape') closeMenu()
     }
 
     const previousOverflow = document.body.style.overflow
@@ -90,71 +117,72 @@ export default function Navbar() {
       document.removeEventListener('keydown', onKeyDown)
       cancelAnimationFrame(raf)
     }
-  }, [open])
+  }, [open, closeMenu])
 
   // Closing on resize avoids leaving a drawer stranded open on desktop.
   useEffect(() => {
-    const mq = window.matchMedia('(min-width: 68rem)')
+    const mq = window.matchMedia('(min-width: 60rem)')
     const onChange = (event) => {
-      if (!event.matches) setOpen(false)
+      if (event.matches) setOpen(false)
     }
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
   }, [])
 
-  const classes = ['nav', light ? 'nav--light' : ''].filter(Boolean).join(' ')
-
   return (
-    <header className={classes}>
-      <div className="container">
-        <div className="nav__pill">
-          <a
-            className="nav__brand"
-            href="#top"
-            aria-label={`${brand.name}, back to top`}
-          >
-            <Logo />
+    <header
+      ref={headerRef}
+      className="nav"
+      data-theme={theme}
+      data-scrolled={scrolled ? 'true' : 'false'}
+    >
+      <div className="nav__inner">
+        <a
+          className="nav__brand"
+          href="#top"
+          aria-label={`${brand.name}, back to top`}
+        >
+          <Logo />
+        </a>
+
+        <nav className="nav__links" aria-label="Primary">
+          {navItems.map((item) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              className={`nav__link ${activeId === item.id ? 'is-active' : ''}`.trim()}
+              aria-current={activeId === item.id ? 'location' : undefined}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="nav__actions">
+          <a className="nav__cta" href="#contact">
+            {ctaNavLabel}
+            <ArrowUpRight aria-hidden="true" />
           </a>
-
-          <nav className="nav__links" aria-label="Primary">
-            {navItems.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                className={`nav__link ${activeId === item.id ? 'is-active' : ''}`.trim()}
-                aria-current={activeId === item.id ? 'true' : undefined}
-              >
-                <span className="nav__link-label">{item.label}</span>
-              </a>
-            ))}
-          </nav>
-
-          <div className="nav__actions">
-            <Button href="#contact" icon={ArrowUpRight}>
-              {ctaNavLabel}
-            </Button>
-          </div>
-
-          <button
-            ref={toggleRef}
-            className="nav__toggle"
-            type="button"
-            aria-expanded={open}
-            aria-controls="nav-drawer"
-            onClick={() => setOpen((value) => !value)}
-          >
-            {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-            <span className="u-sr-only">{open ? 'Close menu' : 'Open menu'}</span>
-          </button>
         </div>
+
+        <button
+          ref={toggleRef}
+          className="nav__toggle"
+          type="button"
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          onClick={() => (open ? closeMenu() : setOpen(true))}
+        >
+          {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+        </button>
       </div>
 
-      {/* Kept in the DOM so aria-controls always resolves. */}
+      {/* Kept in the DOM so aria-controls always resolves; inert when closed. */}
       <div
-        id="nav-drawer"
+        id="mobile-nav"
         ref={drawerRef}
         className={`nav-drawer ${open ? 'is-open' : ''}`.trim()}
-        aria-label="Site menu"
         {...(open ? {} : { inert: '' })}
       >
         <nav aria-label="Mobile">
@@ -162,9 +190,12 @@ export default function Navbar() {
             {navItems.map((item) => (
               <li key={item.id}>
                 <a
-                  className="nav-drawer__link"
+                  className={`nav-drawer__link ${
+                    activeId === item.id ? 'is-active' : ''
+                  }`.trim()}
                   href={`#${item.id}`}
-                  onClick={() => setOpen(false)}
+                  aria-current={activeId === item.id ? 'location' : undefined}
+                  onClick={closeMenu}
                 >
                   {item.label}
                 </a>
@@ -174,14 +205,10 @@ export default function Navbar() {
         </nav>
 
         <div className="nav-drawer__foot">
-          <Button
-            href="#contact"
-            size="lg"
-            icon={ArrowUpRight}
-            onClick={() => setOpen(false)}
-          >
+          <a className="nav__cta" href="#contact" onClick={closeMenu}>
             {ctaNavLabel}
-          </Button>
+            <ArrowUpRight aria-hidden="true" />
+          </a>
         </div>
       </div>
     </header>

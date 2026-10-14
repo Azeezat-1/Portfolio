@@ -14,7 +14,7 @@ export default function Footer() {
   const links = socialLinks.filter((link) => link.id !== 'email')
 
   return (
-    <footer className="footer">
+    <footer className="footer" data-nav-theme="dark">
       <div className="container">
         <div className="footer__grid">
           <div className="footer__brand">
