@@ -180,13 +180,15 @@
   --nav-line: #e4e2ee; /* hairline under the bar on light */
   --nav-line-dk: rgb(255 255 255 / 12%); /* hairline under the bar on dark */
 
-  /* --- Layout ------------------------------------------------------------- */
-  --container: 74rem;
+  /* --- Layout -------------------------------------------------------------
+     `--container` + `--page-gutter` are the single source of truth for the
+     page's horizontal rhythm. The header, every section, the utility bar and
+     the footer all use them, so content edges line up with the header exactly.
+     ---------------------------------------------------------------------- */
+  --container: 75rem; /* 1200px, matches the header */
+  --page-gutter: 1.5rem; /* 24px, matches the header's inner padding */
   --nav-height: 4.5rem; /* 72px desktop bar */
   --nav-height-mobile: 4rem; /* 64px mobile bar */
-  /* Inner inset shared by the nav pill and every section, so section content
-     always lines up with the header's content and never reaches past it. */
-  --content-inset: clamp(0.75rem, 2.5vw, 1.5rem);
 
   /* --- Blueprint texture (faint grid on dark bands) ------------------------ */
   --bp-line: rgb(255 255 255 / 5%);
