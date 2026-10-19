@@ -1,5 +1,7 @@
 import arriyaadhShot from '../assets/projects/arriyaadh.jpg'
 import grandeurShot from '../assets/projects/grandeur.jpg'
+import figmaToCodeShot from '../assets/projects/figma-to-code.jpg'
+import htmlCssShot from '../assets/projects/html-css.jpg'
 
 /**
  * Selected work (brief §3.7). Two real, shipped projects with live URLs.
@@ -43,6 +45,34 @@ export const projects = [
     domain: 'grandeur-fd77.vercel.app',
     screenshot: grandeurShot,
     toolkit: ['react', 'node', 'mongodb'],
+    repo: null,
+  },
+  {
+    id: 'figma-to-code-project',
+    name: 'Figma to Code',
+    tags: ['Figma to Code', 'Landing Page'],
+    description:
+      'A landing page built by converting a Figma design to production-ready code.',
+    role: 'Figma to code conversion and implementation.',
+    stack: ['HTML', 'CSS', 'JavaScript'],
+    url: 'https://clinquant-souffle-424d1b.netlify.app/',
+    domain: 'clinquant-souffle-424d1b.netlify.app',
+    screenshot: figmaToCodeShot,
+    toolkit: ['html', 'css', 'javascript'],
+    repo: null,
+  },
+  {
+    id: 'pure-html-css-project',
+    name: 'Pure HTML & CSS',
+    tags: ['HTML', 'CSS', 'Static'],
+    description:
+      'A static website built purely with HTML and CSS.',
+    role: 'Designed and built with HTML and CSS.',
+    stack: ['HTML', 'CSS'],
+    url: 'https://resonant-pavlova-d4aa30.netlify.app/',
+    domain: 'resonant-pavlova-d4aa30.netlify.app',
+    screenshot: htmlCssShot,
+    toolkit: ['html', 'css'],
     repo: null,
   },
 ]
